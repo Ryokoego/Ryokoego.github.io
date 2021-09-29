@@ -1,0 +1,920 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discrete event system(离散事件系统)</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h2><a id="Discrete_event_systems_0"></a><strong>Discrete event systems(离散事件系统)</strong></h2>
+<p><strong>Multi-agent systems(多代理系统)<br>
+Hybrid systems(混合系统)<br>
+Manufacturing systems(制造系统)<br>
+Transportation systems(运输系统)<br>
+Mechanical systems(机械系统)<br>
+Hybrid systems(液压系统)</strong></p>
+<p><strong>Discrete event systems:main contributions(离散事件系统：主要贡献)</strong><br>
+Main theoretical problems(主要理论问题):<br>
+Observability and state estimation(可观察性和状态估计)<br>
+Fault diagnosis,diagnosability analysis and enforcement(故障诊断、可诊断性分析与执行)<br>
+Opacity analysis and enforcement(不透明度分析和执行)<br>
+Supervisory control under attacks(攻击下的监督控制)<br>
+Model identifications(型号标识)<br>
+<strong>Reference models(参考模型):</strong><br>
+Petri nets(Petri网)<br>
+Finite state automata(有限状态自动机)</p>
+<h2><a id="1___18"></a>1 - 动力系统分类</h2>
+<p>Outline<br>
+Intoroduction(介绍)</p>
+<p>Dynamical Systems and mathematical models<br>
+<em><strong><strong>系统论</strong></strong></em>的目标是发展一种普遍的统一形式主义<br>
+建模、分析和控制不同领域感兴趣的动力系统<br>
+科学和工程。<br>
+系统是物理对象，而模型是（或多或少准确的）<br>
+其行为的数学描述捕捉了那些被认为是最重要的特征<br>
+下面我们简要介绍这些类。</p>
+<p><strong>连续时间驱动系统</strong><br>
+一个动态系统被称为时间驱动系统（TDS），如果它的状态<br>
+随着时间的推移而变化。<br>
+当自变量时间 t ∈ R =⇒ 连续时间时间驱动系统。<br>
+它的行为通常由一组微分方程来描述：<br>
+˙x(t) = f (x(t), u(t))，<br>
+其中 x(t) ∈ Rn是状态，u(t) ∈ Rm 是时间 t 的输入。<br>
+在线性情况下：<br>
+˙x(t) = Ax(t) + Bu(t)，<br>
+其中 A ∈ Rn×n和 B ∈ Rn×m 是实数矩阵。<br>
+d/dt V(t) = q1(t) − q2(t).<br>
+V(t)：液体体积； 系统的状态。<br>
+q1 (t) 和 q2 (t)：两个泵可以施加的进/出流量；输入。<br>
+<img src="https://img-blog.csdnimg.cn/1e6a56d25b34486887aa36babfda9eeb.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+当自变量时间 t ∈ Z =⇒ 离散时间时间驱动<br>
+系统。<br>
+它的行为通常由差分方程组描述<br>
+x(k + 1) = f (x(k), u(k))<br>
+其中 x(k) ∈ Rn是状态，u(k) ∈ Rm 是输入。<br>
+在线性情况下：x(k + 1) = Ax(k) + Bu(k)<br>
+其中 A ∈ Rn×n和 B ∈ Rn×m 是实数矩阵。</p>
+<p>假设在之前所示的罐中，体积和流量的测量值只能在每 T 个单位的时间（采样间隔）中进行。 我们只能描述系统在 0、T、2T、3T 时刻的行为。 . . , kT, . . . .<br>
+我们定义离散时间信号 V(k) = V(kT), q1(k) = q1(kT) 和<br>
+q2(k) = q2(kT) 其自变量为 k = 0, 1, … . … 如果我们让 ∆t = T =⇒d/dt V(t) ≈ ∆V∆t = V(k + 1) − V(k) T =⇒ V(k + 1) − V(k) = Tq1(k) − Tq2(k)</p>
+<p><em><strong>离散事件系统</strong></em></p>
+<p>离散事件系统（或事件驱动系统）是具有离散状态空间和分段恒定状态轨迹的动态系统，该轨迹根据决定状态转换的物理事件的突然发生（可能以未知的不规则间隔）而演变。<br>
+事件发生的时刻以及实际事件通常是不可预测的。<br>
+这种系统的状态可能具有逻辑或符号，而不是数字值，这些值随着事件而变化，也可以用非数字术语来描述。<br>
+有限状态自动机是离散状态事件驱动系统最常见的模型。</p>
+<p><em><strong>示例：在传送带上装载零件的机器人</strong></em><br>
+机器人可以是：空闲、装载零件或在零件处于错误状态时位置不正确。<br>
+推动其演变的事件是：a（参与），b（正确参与）<br>
+加载）、c（零件位置不正确）和 d（零件重新定位）。<br>
+<img src="https://img-blog.csdnimg.cn/cde714d75b8d4fa1828ee6ae86267408.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>逻辑离散事件系统：模型未指定时序事件发生次数 =⇒ 一个常见的简化假设是只考虑事件发生的顺序。<br>
+定时离散事件系统：该模型还指定了定时<br>
+结构体。 我们区分：<br>
+a) 非随机：如果时间是先验已知的； b) 随机的：如果由于随机延迟或事件的随机发生而无法先验地知道时间。</p>
+<p><em><strong>抽象</strong></em><br>
+人们可能认为离散事件系统与时间驱动系统有着本质的不同。<br>
+然而，通常情况下，允许时间驱动模型的物理系统也可以用离散事件模型来描述，其中忽略了时间驱动的动力学。<br>
+此过程以保留的方式推导出更简单的模型<br>
+在隐藏不感兴趣的细节的同时分析的属性称为抽象。</p>
+<p><em><strong>抽象：一个例子</strong></em><br>
+假设必须控制先前引入的罐以保持<br>
+区间 [hmin, hmax] 内的液位。<br>
+我们可以使用一个监控器来控制泵 =⇒ 它在达到 hmax 水平时阻止输入流量 q1 并在达到水平 hmin 时阻止输出流量 q2。 =⇒ 监督者：<br>
+<img src="https://img-blog.csdnimg.cn/b2ca54efda2e4fbfa685d78025dd468f.png" alt="在这里插入图片描述"></p>
+<p>表示跨越阈值 hmin 和 hmax 的水平的事件可由水平传感器产生。</p>
+<p><em><strong>主要应用领域</strong></em><br>
+离散事件系统在多个领域得到应用：计算机科学、电信、制造、运输、物流等。</p>
+<p><em><strong>混合系统</strong></em><br>
+定义：混合系统是一种系统，其中感兴趣的行为结合了时间驱动系统和离散事件系统的动力学。<br>
+混合系统通常会生成由连续值和离散值信号的组合组成的混合信号。 =⇒ 这些信号中的一些从连续集（例如实数集）中获取值，而其他信号从离散的、通常是有限集（例如符号集 {a; b; c}）中获取值。<br>
+连续或离散值信号取决于自变量，例如时间，它也可能是连续或离散值的。<br>
+一些信号可以是时间驱动的，而其他信号可以以异步方式进行事件驱动。</p>
+<p><em><strong>示例：恒温器</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/b4107f9f7e1e465fa9f61a98566efd54.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>恒温器必须将房间的温度 x(t) 保持在<br>
+TON = 20 ◦C 和 TOFF = 22 ◦C，打开和关闭热泵。<br>
+房间在温度下与外部环境进行热交换<br>
+Te &lt; Ton吨。</p>
+<p><em><strong>示例：恒温器</strong></em><br>
+当热泵关闭时 =⇒ 热流为 −k[x(t) − Te ] [J/s]（k 是一个合适的系数）。 =⇒ 温度下降<br>
+x˙(t) = −k[x(t) − Te ]。<br>
+当热泵开启时 =⇒ 热流等于 q(t) [J/s] =⇒<br>
+温度升高根据<br>
+x˙(t) = q − k[x(t) − Te ]。<br>
+恒温器在温度小于或等于 TON 时激活泵（状态为 ON），当温度大于或等于 TOFF 时停止泵（状态为 OFF）。</p>
+<p><em><strong>系统分类</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/c03e0c195be94326b9ef8fe4d461708c.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+我们将专注于有限状态自动机并研究四个主要问题：<br>
+局部观察下的状态估计，<br>
+监督控制，<br>
+故障诊断，<br>
+不透明度。</p>
+<h2><a id="2_121"></a>2-正式语言</h2>
+<p><em><strong>正式语言：定义和物理意义</strong></em><br>
+在数学、计算机科学和语言学中，形式语言是一组符号串以及一组特定于它的规则。<br>
+形式语言的字母表是可以形成语言字符串的符号或字母的集合。<br>
+由该字母表形成的字符串称为单词。<br>
+在本课程中，我们使用形式语言来描述动态系统的行为 =⇒ 字母表描述了系统可以生成的事件集。</p>
+<p><em><strong>字母表：定义和示例</strong></em><br>
+字母 E 是有限的非空符号集。<br>
+字母表包含的符号数称为基数，用 |E| 表示。<br>
+例子：<br>
+E1 = {0, 1}, E2 = {a, b, c, . . . x, y, z}, E3 = {♣, ♦, ♥, ♠}。 E1：符号 0 和 1（二进制数）=⇒ |E1| = 2<br>
+E2：罗马字母表中的小写字母 =⇒ |E2| = 26<br>
+E3：用于表示法国扑克牌的非字母数字符号=⇒ |E3| = 4</p>
+<p><em><strong>词：定义和例子</strong></em><br>
+在字母 E 上定义的单词（或字符串或痕迹）w 是 E 中的符号序列。<br>
+组成一个词的符号数称为它的长度，用|w| 表示。<br>
+|w|e 表示符号 e ∈ E 在 w 中出现的次数。<br>
+例子：<br>
+w1 = 00110 定义在 E1 =⇒ |w1| = 5，|w1|0 = 3，和 |w1|1 = 2。<br>
+w2 = 在 E2 上定义的 hello =⇒ |w2| = 5。<br>
+w3 = ♣♣♣ 定义在 E3 =⇒ |w3| = 3。</p>
+<p><em><strong>克林星（或克林闭包）：定义</strong></em><br>
+克林星（或克林闭包）：定义<br>
+在字母 E 上定义的所有单词的集合由 E* 表示。 =⇒ E∗ 被称为 E 的 Kleene 星（或 Kleene 闭包）。<br>
+空词，即零长度的序列，在所有字母表上都有定义，并且总是用 ε 表示。 写 w ∈ E∗ 表示 w 是在 E 上定义的词。<br>
+虽然字母表 E 是一个有限集，但集合 E* 总是无限的。</p>
+<p><em><strong>Kleene 星（或 Kleene 闭包）：如何构建它</strong></em><br>
+让我们解释如何以有序的方式构造集合 E*。<br>
+示例：让 E = {a, b, c}。 ε：零长度的词。<br>
+a、b、c：长度为 1 的单词。因此，请注意，符号也是<br>
+一个字。<br>
+aa、ab、ac、ba、bb、bc、ca、cb、cc：长度为 2 的单词。<br>
+啊啊啊啊啊啊 . ., ccb, ccc：长度为 3 的单词。<br>
+· · ·</p>
+<p><em><strong>级联</strong></em><br>
+两个词 w1 ∈ E∗ 和 w2 ∈ E∗ 的串联是一个新词<br>
+w = w1 · w2 ∈ E∗ 由 w1 中的符号序列和 w2 中的符号序列组成。<br>
+示例：将单词 w1 = a 与单词 w2 = bba 连接起来得到<br>
+w = w1 · w2 = 阿爸。<br>
+用于表示连接的符号·通常被省略，写成w1w2而不是w1·w2。<br>
+拼接得到的词的长度等于组成它的词的长度之和，即|w1w2| = |w1| + |w2|。</p>
+<p>=⇒ 连接是一个关联运算符，即(w1w2)w3 = w1(w2w3) = w1w2w3。<br>
+示例：如果 w1 = he、w2 = ll 和 w3 = o，则它们的串联为 w = w1w2w3 = hello。 =⇒ 连接不是交换运算符，即通常 w1w2 6 = w2w1。<br>
+示例：如果 w1 = ab 且 w2 = cd，显然 abcd 6 = cdab。 =⇒ 该运算符的恒等元素是空词 ε，即对于所有<br>
+w ∈ E∗ 它成立 wε = εw = w。</p>
+<p>遵循初等算术中用于乘法的相同符号，通常使用指数 k 来表示 k 个相同符号的连接。<br>
+例子：单词 aabbb 也可以写成 a2b3。<br>
+对于所有符号 e ∈ E，我们通常表示 e0 = ε，因为它持有 ek e0 = ek+0 = ek，因此 e0 必须是单位元素。</p>
+<p><em><strong>单词的前缀、子串和后缀</strong></em><br>
+如果一个词 w ∈ E∗ 可以写成 w = uvz 其中 u, v, z ∈ E∗<br>
+，则：词u称为w的前缀，词v称为w的子串，词z称为w的后缀。<br>
+如果 u 是 w 的前缀，我们写 u w。 示例：考虑单词 w = abcd。<br>
+它的前缀是 ε、a、ab、abc 和 abcd。<br>
+它的后缀是 ε、d、cd、bcd 和 abcd。<br>
+它的子串是：它的所有前缀、所有后缀和字符串 b、c 和bc。</p>
+<p><em><strong>投影</strong></em><br>
+给定一个词 w ∈ E∗ 和一个子集字母表 Eˆ ⊆ E，w 在 Eˆ 上的投影，用 w ↑ Eˆ 表示，是从 w 中去除所有不属于 Eˆ 的符号得到的词。<br>
+示例：设 E = {a, b, c} 和 Eˆ = {a, b}。<br>
+给定单词 w = abccacba =⇒ w ↑ Eˆ = ababa。</p>
+<p><em><strong>定义和例子</strong></em><br>
+在字母 E 上定义的语言 L 是该字母表上的一组单词。 它的基数，即它包含的单词数，用 |L| 表示。<br>
+示例：给定字母 E = {a, b}，考虑以下语言：<br>
+L1 = {aab, aa, bbba}：由3个词组成，即|L1| = 3。<br>
+L2 = {a, b} = E：由长度为 1 的 2 个单词组成，与字母表一致。<br>
+L3 = {ε, a}：由2个词组成，包括空词。<br>
+L4 = {ε}：仅由空词组成。<br>
+L5 = {w ∈ E∗ | |w| = 5}：由长度为 5 的所有单词组成。<br>
+L6 = {w ∈ E∗<br>
+| |w| &gt; 3}：由长度大于 3 的所有单词组成。<br>
+L7 = ∅：是空集，不包含单词。<br>
+L8 = E*：由 E 上定义的所有单词组成。</p>
+<p><em><strong>包含关系</strong></em><br>
+由于语言是词的集合，因此可以通过包含⊆和严格包含⊂关系来比较两种语言。<br>
+示例：语言 L1 = {a} ⊂ L2 = {a, aa}。<br>
+这两种语言都不包含在 L3 = {aaa} 中。 =⇒ 如果 L 是字母 E 上的一种语言，则它成立 ∅ ⊆ L ⊆ E∗。</p>
+<p><em><strong>联合与交集</strong></em><br>
+通常的二元集合运算符，例如并集和交集，可以应用于语言。 =⇒ 令 L1 ⊆ E1∗<br>
+和 L2 ⊆ E2∗ 是两种语言，让 E¯ = E1 ∩ E2 和 E = E1 ∪ E2 是它们各自字母的交集和并集。<br>
+我们定义以下语言： L1 和 L2 的并集： L1 ∪ L2 = {w ∈ E∗ | w ∈ L1 ∨ w ∈ L2}；<br>
+L1 和 L2 的交集： L1 ∩ L2 = {w ∈ E¯∗ | w∈L1，w∈L2}。<br>
+示例：如果 L1 = {ε, a} 且 L2 = {a, b, ab} =⇒ L1 ∩ L2 = {a} 且<br>
+L1 ∪ L2 = {ε, a, b, ab}。</p>
+<p>联合和交集是结合和交换运算符。<br>
+交集算子的单位元素是语言 E*，即，对于所有 L ⊆ E∗，它成立 L ∩ E∗ = E∗ ∩ L = L。<br>
+联合运算符的标识元素是语言 ∅，即对于所有 L ⊆ E∗ 都成立 L ∪ ∅ = ∅ ∪ L = L。</p>
+<p><em><strong>级联</strong></em><br>
+设 L1, L2 ⊆ E∗ 是两种语言。 我们定义 L1 和 L2 的连接语言<br>
+L1L2 = {w = w1w2 ∈ E∗ | w1∈L1，w2∈L2}，<br>
+由 L1 中的一个单词与一个单词的串联所有单词组成<br>
+L2 中的单词。<br>
+示例：如果 L1 = {ε, a} 且 L2 = {a, b, ab} =⇒ L1L2 = {ε · a} ∪ {ε · b} ∪ {ε · ab} ∪ {a · a} ∪ {a · b} ∪ {a · ab} = {a, b, aa, ab, aab}<br>
+单词 ab 可以通过两种不同的方式获得：将 ε 与 ab 连接或将 a 与 b 连接。</p>
+<p>语言上的连接运算符是结合的和不可交换的。<br>
+它的身份元素是由空词 {ε}, =⇒ 对于所有 L ⊆ E∗ 组成的语言，它持有 L{ε} = {ε}L = L。<br>
+通常对所有 L ⊆ E∗ 表示：L0 = {ε}，L1 = L，L2 = LL，等等。<br>
+连接算子相对于并集是可分配的，即 (L1 ∪ L2)L3 = L1L3 ∪ L2L3 并且 L1(L2 ∪ L3) = L1L2 ∪ L1L3。</p>
+<p><em><strong>克莱星</strong></em><br>
+给定一种语言 L ⊆ E∗ ，它的 Kleene 星（或 Kleene 闭包）是语言<br>
+L∗ = {ε} ∪ L ∪ LL ∪ LLL ∪ · · · = ∞[k=0 Lk ,<br>
+由将 L 中的单词连接任意次数获得的所有单词组成。<br>
+示例：如果 L = {bb} 是 E = {b} =⇒ L∗ = {ε} ∪ {bb} ∪ {bbbb} ∪ · · · = {(bb)n | 上的语言 n ≥ 0} ⊂ E*。<br>
+这个定义与字母表（被视为一种语言）的克林星的定义一致：它生成了这个字母表上所有可能单词的集合。 这证明了用于表示这个集合的符号 E*。</p>
+<p><em><strong>前缀闭包</strong></em><br>
+给定一种语言 L ⊆ E∗，它的前缀闭包是语言<br>
+L = {u ∈ E∗ | 有 w ∈ L : u w}<br>
+由 L 中单词的所有前缀组成。<br>
+通常 L ⊆ L-。<br>
+如果 L = L -成立，则称语言 L 为封闭前缀。<br>
+例子：<br>
+如果 L1 = {ε, a, aa}，则 L1 = L1 =⇒ L1 是前缀闭合的。<br>
+如果 L2 = {a, b, ab}，它持有 L2 ( L2 = {ε, a, b, ab} =⇒ L2 不是前缀闭合的。</p>
+<p><em><strong>补充</strong></em><br>
+给定一种语言 L ⊆ E∗，它的补语是语言 {L = {w ∈ E∗ | w 6∈L}<br>
+由所有不属于 L 的词组成。<br>
+我们也可以写成 { L = E∗ \ L。<br>
+示例：考虑 E = {a} =⇒ { L1 = {an | 上的语言 L1 = {ε, a, aa} n≥3}。</p>
+<p><em><strong>并发组合：定义</strong></em><br>
+在描述由多个子系统组成的系统的行为时，此运算符起着关键作用。<br>
+设 L1 ⊆ E1∗ 和 L2 ⊆ E2∗ 是两种可能不同的语言<br>
+字母表，并令 E = E1 ∪ E2 是它们的字母表的并集。<br>
+L1 和 L2 的并发组合是语言 L1 || L2 = {w ∈ E∗ | w ↑ E1 ∈ L1,w ↑ E2 ∈ L2}，由E上的所有词组成，其在E1上的投影是L1的一个词，E2上的投影是L2的一个词。</p>
+<p><em><strong>并发组合：示例</strong></em><br>
+示例：考虑 E1 = {a, b}, E2 = {b, c}, L1 = {abn | n ≥ 0} 且 L2 = {cbcnb | n≥0}。 L1 和 L2 的并发组合为 L = {acbcnb | n≥0} ∪ {cabcnb | n≥0}。<br>
+注意 L 在 E1 上的投影是语言 {abb} ⊂ L1，而 L 在 E2 上的投影是语言 {cbcnb | n ≥ 0} = L2。</p>
+<p><em><strong>并发组合：一个特例</strong></em><br>
+作为一种特殊情况，如果组合语言的字母表相同，则并发组合运算符等价于交集。 =⇒ 如果 E1 = E2 = E 对于每个 w ∈ E∗ 它成立 w ↑ E1 = w ↑ E2 = w 因此 L1 k L2 = {w ∈ E∗ | w ↑ E1 ∈ L1,w ↑ E2 ∈ L2} = {w ∈ E∗ | w ∈ L1,w ∈ L2} = L1 ∩ L2。</p>
+<p><em><strong>并发组合：属性</strong></em><br>
+并发组合运算符是结合的和可交换的。<br>
+它的标识元素是语言 E*。<br>
+我们得出结论，我们在本小节中定义的所有二元运算符都是关联的；因此它们可以自然地扩展到在两种以上的语言上运行。例如，将 L1 与 L2 组合并将生成的语言与 L3 组合得到语言 L = L1 || L2 || L3</p>
+<h2><a id="3___274"></a>3 - 确定性有限自动机</h2>
+<p><em><strong>离散事件模型</strong></em><br>
+在上一节中，我们介绍了形式语言，要么列出它们的单词，要么用集合符号描述它们。<br>
+也可以通过生成器定义语言，即语言可以关联的结构。<br>
+这样的生成器是离散事件模型。<br>
+我们现在关注一个特定的模型，称为确定性有限自动机。<br>
+它基于两个原语：状态和转换。 它以自然的方式描述了动态系统的行为，该系统在离散事件发生时从一个状态演变到另一个状态。</p>
+<p><em><strong>确定性有限自动机的定义</strong></em><br>
+确定性有限自动机 (DFA) 是一个 5 元组<br>
+G = (X, E, δ, x0, Xm)<br>
+在哪里：<br>
+X 是有限状态集；<br>
+E 是一个字母表；<br>
+δ : X × E → X 是一个转移函数；<br>
+x0 ∈ X 是初始状态；<br>
+Xm ⊆ X 是一组最终状态（或标记状态）。<br>
+我们使用 DFA 来描述离散事件系统，因此字母表将代表一组有限的事件。<br>
+转移函数指定自动机的动力学</p>
+<p><em><strong>描述为图形</strong></em><br>
+一个自动机可以用一个图来描述，其中每个状态对应一个节点，并用一个圆圈表示。 特别地，初始状态由带有输入箭头的圆圈表示，而最终状态由双圆圈表示。<br>
+如果 x¯ = δ(x, e) 将有一条从节点 x 到节点 ¯x 的有向边，用符号 e 标记来表示从 x 到 ¯x 的过渡。<br>
+该弧通常称为电子过渡。</p>
+<p><em><strong>图形描述：示例</strong></em><br>
+x0 x1 x2 a b c d d<br>
+状态集：X = {x0, x1, x2},<br>
+字母表：E = {a, b, c, d},<br>
+初始状态 x0 和一组最终状态 Xm = {x0}，<br>
+转移函数：δ a b c d x0 x1 x1 x2 x0 x2 x2 x0</p>
+<p><em><strong>例子：物理意义</strong></em><br>
+x0 x1 x2 a b c d d<br>
+一台机器可以处于 3 种状态：<br>
+– 关闭（x0，初始状态），待机（x1），工作（x2）。<br>
+– 事件 a：操作员打开机器；<br>
+– 事件 b：设置操作；<br>
+– 事件 c：机器加工零件；<br>
+– 事件 d：操作员关闭机器。<br>
+Xm = {x0}：机器在工作期结束时应关闭。</p>
+<p><em><strong>事件</strong></em><br>
+每个转换都与一个事件相关联 =⇒ 来自 x 的传出转换的标签指定哪些事件可能发生在 x。<br>
+给定 DFA G = (X, E, δ, x0, Xm)，在状态 x ∈ X 中启用（或活动）的事件集是 A(x) = {e ∈ E | δ(x, e) 被定义}。<br>
+为了表示 e ∈ A(x)，还可以写成 δ(x, e)!，这意味着函数 δ 是为 (x, e) 对定义的。<br>
+函数 δ 是偏函数 =⇒ 对于某些 x ∈ X 和某些 e ∈ E 可能没有从状态 x (A(x) ( E) 输出的 e-转移)。<br>
+我们不能有两个或多个具有相同标签的转换从状态 x 输出。</p>
+<p><em><strong>制作</strong></em><br>
+自动机的行为是由它所有可能的进化决定的，以它的生产为特征。<br>
+给定一个 DFA G = (X, E, δ, x0, Xm)，我们定义长度 k 的产生，一个状态和转换序列 xj0 e1 −→ xj1 e2 −→ · · · xjk−1 ek −→ xjk<br>
+其中：对于所有 i = 0, . . . , k 它持有 xji ∈ X 并且对于所有 i = 1, . . . , k 它持有 xji = δ(xji−1 , ei)，即，来自状态 xji−1 的事件 ei 的发生产生状态 xji 。<br>
+这种产生式从状态 xj0 开始，生成单词 w = e1e2 · · · ek 到达状态 xjk 。</p>
+<p><em><strong>例子</strong></em><br>
+x0 x1 x2 a b c d d x0 a −→ x1 b<br>
+−→ x2 c −→ x2 c −→ x2<br>
+它描述了一个进化过程，首先打开机器，然后<br>
+经过一次设置到达工作状态和最后处理两部分。<br>
+备注：生产可以从任何状态开始，不一定从<br>
+第一个。</p>
+<p>另一种可能的生产是<br>
+x2 c −→ x2 c −→ x2 d −→ x0 a −→ x1<br>
+由于 δ 是一个函数，因此不可能有两个不同的产生式从相同的状态开始并生成相同的单词。</p>
+<p><em><strong>δ 的传递闭包和自反闭包</strong></em><br>
+以更简洁的方式描述 DFA 的产生式：<br>
+给定一个 DFA G = (X, E, δ, x0, Xm)，转移函数 δ 的传递和自反闭包是函数 δ∗ : X × E∗ → X 使得 δ∗(x,w) = ¯ x 如果存在产生式 x e1 −→ xj1 e2 −→ · · · xjk−1 ek −→ x¯<br>
+从 x 开始生成单词 w = e1e2 · · · ek 到达状态¯x。<br>
+为了表示存在从 x 生成 w 的产生式，我们还使用符号 δ∗(x,w)！ 意思是“定义了δ∗(x,w)”。<br>
+按照惯例，δ∗(x, ε) = x 对于所有 x ∈ X =⇒ 从一个状态开始并且<br>
+生成空词时，自动机保持相同的状态。</p>
+<p><em><strong>例子</strong></em><br>
+x0 x1 x2 a b c d d<br>
+它持有 δ∗(x0, abcc) = x2。</p>
+<p><em><strong>确定性有限自动机的语言</strong></em><br>
+<em><strong>生成和接受的词</strong></em><br>
+自动机的每个产生式都与字母表 E上的一个词相关联 ，=⇒ 如果考虑从初始状态开始的所有可能产生式的集合，则所有对应词的集合定义语言 L ⊆ E*。<br>
+给定一个 DFA G = (X, E, δ, x0, Xm)，我们说一个词 w ∈ E∗ 是： 如果 δ∗(x0,w)! =⇒ 存在从初始状态开始生成 w 的产生式； 接受如果 δ∗(x0,w) = x ∈ Xm =⇒ 存在从初始状态开始生成 w 并到达最终状态的产生式。</p>
+<p>因为 δ∗(x0, abcc) = x2 生成了单词 abcc，但是因为状态 x2 不是最终的所以不被接受。<br>
+因为 δ∗(x0, ad) = x0 并且 x0 是最终的，所以词 ad 被接受（因此也被生成）。<br>
+单词 ac 没有生成（因此不被接受），因为 δ∗(x0, ac) 没有定义。</p>
+<p>空词总是可以生成并且只有在以下情况下才会被接受<br>
+δ∗(x0, ε) = x0 ∈ Xm，即如果初始状态也是最终状态。<br>
+通过检查 DFA 的图形表示，我们可以说如果图中有一条从初始状态开始的有向路径，并且沿着其弧的标签形成 w，则我们可以说生成了 w。<br>
+如果这种路径的终端节点是最终状态，则 w 也被接受。</p>
+<p>给定一个 DFA G = (X, E, δ, x0, Xm) 将两种语言关联到它：<br>
+生成的语言，即所有生成词的集合：L(G) = {w ∈ E∗ | δ∗(x0,w)！ } ⊆ E*;<br>
+=⇒ 它描述了系统的所有可能演变；<br>
+接受的语言，即所有接受词的集合：Lm(G) = {w ∈ E∗ | δ∗(x0,w) ∈ Xm} ⊆ L(G);<br>
+=⇒ 它描述了与完成某些任务相对应的演变。</p>
+<p>DFA 生成的语言总是前缀封闭 =⇒ L(G) = L(G)：如果一个词可以生成，那么它的所有前缀也可以生成。<br>
+DFA 接受的语言不一定是前缀封闭的，因为并非所有接受词的前缀都需要被接受 =⇒ Lm(G) ⊆ Lm(G)。<br>
+我们可以证明： Lm(G) = Lm(G) 当且仅当 Xm = X。</p>
+<p>示例：Word ad 被接受，但其前缀 a 不被接受。 x0 x1 x2 a b c d d<br>
+语言之间的包含关系：如果一个词可以被接受，那么这个词及其所有前缀也可以生成 =⇒ Lm(G) ⊆ L(G)<br>
+其结果：<br>
+Lm(G) ⊆ Lm(G) ⊆ L(G) = L(G)</p>
+<p><em><strong>语言类</strong></em><br>
+DFA 在字母 E 上接受的语言类别：LDFA = {L ⊆ E∗ | （存在 DFA G） : L = Lm(G)}, =⇒ 由某些 DFA 可以接受的所有语言组成。<br>
+如果我们用 L0DFA 表示由 DFA 生成的语言类，可以证明：<br>
+L0DFA ( LDFA =⇒ DFA 接受的语言类别大于 DFA 生成的语言类别。</p>
+<p><em><strong>L’DFA（LDFA：证明</strong></em><br>
+1 如果一种语言属于类 L0DFA（生成），那么它也属于类 LDFA（已接受）=⇒ 如果一种语言是由 DFA G 生成的，那么也存在一个接受它的 DFA G0：G0 是从 G 获得的 将所有状态重新定义为最终状态，以便所有生成的单词也被接受。<br>
+2 为了证明包含是严格的，足以证明在 LDFA 中存在语言但在 L0DFA 中不存在 =⇒ 任何不是所有状态都是最终状态的 DFA G 接受的语言，即 Xm ( X, 前缀不是封闭的 =⇒ 这种语言不属于 L0DFA，因为 DFA 生成的所有语言都是前缀封闭的。</p>
+<p><em><strong>自动机的性质—介绍</strong></em><br>
+我们现在定义自动机的主要属性，它们对应于它所描述的系统的感兴趣的属性。<br>
+由于自动机由图表示，因此可以将这些属性映射到图的属性中。<br>
+但是，根据语言重新定义它们也很重要。</p>
+<p><em><strong>状态的属性</strong></em><br>
+令 G = (X, E, δ, x0, Xm) 为 DFA。 一个状态 x ∈ X 被称为：<br>
+如果存在一个词 w ∈ E∗ 使得 δ∗ (¯x,w) = x，则从状态 ¯x ∈ X 可达。<br>
+从初始状态 x0 可达的状态 x 简称为可达；<br>
+如果存在单词 w ∈ E∗ 使得 δ∗(x,w) = ¯x，则可共同到达状态 ¯x ∈ X。<br>
+状态 x 与状态 ¯x ∈ Xm 共可达，x 简称为共可达；<br>
+若可达但不可共可达则阻塞；<br>
+如果 A(x) = ∅ =⇒ 在 x 处没有启用转换，则死亡。</p>
+<p><em><strong>死亡和阻塞状态</strong></em><br>
+死状态和阻塞状态具有不同的属性。<br>
+一个死状态可能是非阻塞的，如果它是最终的 =⇒ 根据定义，最终状态是共同可达的，因为 δ∗(x, ε) = x ∈ Xm。<br>
+在以下 DFA 中，阻塞状态可能不是死状态 =⇒ x2：</p>
+<p>通过检查自动机的图形，可以说状态 x 是：<br>
+如果存在从 x¯ 开始并到达 x 的有向路径，则从状态 ¯x 可达，<br>
+如果存在从 x 开始并到达 x 的有向路径，则可共同到达状态 x；<br>
+如果节点 x 中没有输出弧，则死亡。</p>
+<p>DFA G 被称为：<br>
+如果所有状态都可达，则可达；<br>
+如果它的所有状态都是可共同可达的，则是可共同可达的；<br>
+非阻塞，如果它的所有状态都是非阻塞的 =⇒ 所有可达的状态也是共同可达的，但可能有状态不是可达的）；<br>
+如果它是可达和共同可达的，则修剪 =⇒ 所有状态都是可达和共同可达的；<br>
+如果从初始状态可到达的每个状态也可共同到达初始状态，则可逆。</p>
+<p><em><strong>DFA 的属性</strong></em><br>
+再次，通过检查图保存结论可以得出。<br>
+特别是，自动机是：<br>
+如果存在不包含标记状态的可到达遍历组件，则阻塞 =⇒ 一旦到达该组件，就无法达到最终状态<br>
+如果初始状态属于遍历组件，则可逆。</p>
+<p><em><strong>例子</strong></em><br>
+x0 x1 x2 b a (a) a x0 x1 x2 b a (b) a x0 x1 b a © a x3<br>
+1.所有状态都是可达的，只有状态x0和x1是共同可达的，状态x3是死的；<br>
+⇒ 这个自动机是可达的，不是共同可达的，并且是阻塞的。</p>
+<p>2.所有状态都是共同可达的，但只有状态 x0 和 x1 是可达的；<br>
+⇒ 这个自动机是不可达的，可共同可达的且不阻塞。</p>
+<p>3.所有状态都是可达和共同可达的；<br>
+⇒ 这个自动机是整齐的。</p>
+<p>三个自动机中没有一个是可逆的。 相反，下面的 DFA 是可逆的。</p>
+<p><em><strong>物理解释</strong></em><br>
+可达性允许人们研究系统在从初始状态开始的演化之后可以处于的可能状态。<br>
+阻塞状态代表一种（通常是不希望的）状态，系统无法从该状态演变为终止状态，因此无法完成任务。<br>
+死状态表示不会发生任何事件的状态。<br>
+可逆性表征系统总是可以恢复到初始状态。</p>
+<p><em><strong>非阻塞和可接受的语言</strong></em><br>
+我们已经看到：Lm(G) ⊆ L(G)。 下面的结果成立。<br>
+当且仅当 Lm(G) = L(G) 时，DFA G 是非阻塞的。<br>
+(If) 如果 Lm(G) = L(G) =⇒ 每个生成的词 u ∈ L(G) 也是一个被接受词的前缀，即对于所有生成的词 u 存在一个词 v 使得 uv ∈ Lm (G) 被接受。 =⇒ 对于每个可达状态 x = δ∗(x0, u)，存在一个 v 使得 δ∗(x, v) 是最终状态 =⇒ 所有可达状态都是共同可达的。<br>
+（仅当）如果 Lm(G) ( L(G) =⇒ 存在一个生成的词 u ∈ L(G) 不是已接受词的前缀，即，不存在词 v 使得 uv ∈ Lm( G) 被接受。 =⇒ 如果 x = δ(x0, u) 是生成 u 所达到的状态，则不存在单词 v 使得 δ∗(x, v) 是最终状态 =⇒ x 可访问但不可访问 -reachable，因此它是阻塞的。</p>
+<p><em><strong>例子</strong></em><br>
+x0 x1 x2 b a (a) a x0 x1 x2 b a (b) a x0 x1 b a © a x3<br>
+=⇒ 在图 (a) 中的阻塞 DFA 中 Lm(G) = {ban | n ≥ 0} 和 Lm(G) ( {ε, a, aa} ∪ {ban | n ≥ 0} = L(G).<br>
+=⇒ 图 (b) 和图 © 中的 DFA 是非- 阻塞是因为在这两种情况下它都成立 Lm(G) = {ban | n ≥ 0} 和 Lm(G) = {ε} ∪ {ban | n ≥ 0} = L(G)。</p>
+<p><em><strong>修剪 DFA</strong></em><br>
+给定一个 DFA G = (X, E, δ, x0, Xm) 要么不可达要么不可共同可达，它的修整分量是 DFA G0 = trim(G) = (X0 , E, δ0 , x0, X0m )，其中 X0 = {x ∈ X | x 在 G 中是可达和共同可达的 }; δ0 (x, e) = δ(x, e) 若 x ∈ X0 且 δ(x, e) ∈ X0 ，否则不定义； X0m = Xm ∩ X0 。<br>
+换句话说：我们删除所有不可到达或不可共同到达的状态以及从它们输入或输出的转换。<br>
+=⇒ 它是： Lm(G0 ) = Lm(G) 和 L(G0 ) = Lm(G0 ) = Lm(G)。</p>
+<p>修整运算符不会更改接受的语言。<br>
+非阻塞 DFA 的修整甚至不会改变生成的语言，而只是移除了无法访问的状态。<br>
+修整阻塞 DFA 必然会改变生成的语言。</p>
+<p><em><strong>自动机作为序列识别器—介绍</strong></em><br>
+形式语言理论通常只考虑一种类型的 DFA 语言：公认的语言。<br>
+这是因为形式语言理论并不将自动机视为自发生成事件的动态系统，而是将其视为序列识别器。<br>
+在这种观点中，DFA 是由从输入磁带读取的符号驱动的设备：根据其当前状态和它从磁带读取的符号，自动机执行移动到新状态的转换，并接受该词，如果 新状态是最终的。<br>
+如果将 DFA 视为由输入符号驱动的设备，则有必要假设可以读取任何符号，而不管自动机的当前状态 =⇒ 完全自动机的概念。</p>
+<p><em><strong>完全 DFA</strong></em><br>
+一个 DFA G = (X, E, δ, x0, Xm) 如果转移函数 δ(x, e) 是为所有状态 x ∈ X 和所有符号 e ∈ E 定义的，或者等价地，如果对于所有 x ∈ X 它持有 A(x) = E。<br>
+示例：不完整的 DFA。<br>
+x0 x1 x2 a b c d d<br>
+备注：如果 G 是完全自动机，则 L(G) = E*。</p>
+<p><em><strong>如何完成 DFA</strong></em><br>
+算法：完成一个 DFA<br>
+输入：一个不完整的 DFA G = (X, E, δ, x0, Xm)。<br>
+输出：一个完整的 DFA G0 = (X0 , E0 , δ0 , x00, X0m) 其中 Lm(G0 ) = Lm(G) 和 L(G0 ) = E*。<br>
+1 令 X0 = X ∪ {xc}，即 G0 的状态集包括 G 的状态集加上一个新状态 xc 。 2 令E0 = E，x00 = x0 和X0m = Xm，即G 和G0 的字母表、初始状态和最终状态集是相同的。<br>
+3 对于所有 x ∈ X0 和所有 e ∈ E，如果定义了 δ(x, e)，则令 δ0 (x, e) = δ(x, e)； xc 否则。</p>
+<p><em><strong>示例</strong></em><br>
+完成自动机 G x0 x1 x2 a b c d d<br>
+一个得到自动机 G0 x0 x1 x2 a b c d d a,b,c,d</p>
+<p><em><strong>备注</strong></em><br>
+虽然完全自动机 G0 接受与 G 相同的语言，但它不会生成相同的语言。<br>
+特别是 G0 肯定是阻塞的，因为新状态 xc 是不可共同到达的。</p>
+<h2><a id="4_494"></a>4-非确定性有限自动机</h2>
+<p><em><strong>一种新的离散事件模型</strong></em><br>
+我们现在介绍第二种离散事件模型，称为非确定性有限自动机。<br>
+它可以看作是确定性有限自动机的推广。</p>
+<p><em><strong>非确定性有限自动机的定义</strong></em><br>
+非确定性有限自动机 (NFA) 是一个 5 元组<br>
+G = (X, E, ∆, x0, Xm),<br>
+其中：<br>
+X 是有限状态集；<br>
+E 是一个字母表；<br>
+∆ ⊆ X × Eε × X 为过渡关系，其中 Eε = E ∪ {ε}；<br>
+x0 ∈ X 是初始状态；<br>
+Xm ⊆ X 是一组最终状态（或标记状态）。</p>
+<p><em><strong>与 NFA 关联的图</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/a107dc9f4f2d4b44a9bd686505aa119f.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_15,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+一个 NFA，其中 X = {x0, x1, x2, x3, x4}，字母 E = {a, b}，初始状态 x0，最终状态集 Xm = {x4}，转换关系：<br>
+∆ = { (x0, ε, x1),(x0, a, x0),(x0, b, x3)(x1, b, x0),(x1, b, x2), (x2, a, x2), (x2, b, x4),(x3, a, x2),(x3, a, x4),(x4, a, x4) }。</p>
+<p><em><strong>DFA 的泛化</strong></em><br>
+NFA 可以看作是 DFA =⇒ 的泛化，转移关系 Δ 是转移函数 δ 的泛化，并引入了两个不同的非确定性原语。<br>
+1.用空词 ε 标记的转换（也称为 ε-转换）。这些转换描述了“无声的”或“不可观察的”事件。<br>
+2.两个或多个从相同状态发出并具有相同标签的转换。 这些转换描述了“无法区分的事件”。</p>
+<p><em><strong>生产</strong></em><br>
+与 DFA 的情况一样，NFA 的行为由其所有可能的演变给出，以它的产生为特征。<br>
+给定一个 NFA G = (X, E, ∆, x0, Xm)，我们定义了长度 ka 状态和转换序列的产生 xj0 e01 −→ xj1 e02 −→ · · · xjk−1 e0k −→ xjk<br>
+其中：对于所有 i = 0，… . . , k 它持有 xji ∈ X 并且对于所有 i = 1, . . . , k 成立 (xji−1 , ei0 , xji) ∈ ∆ 其中 ei0 ∈ Eε 可能是 E 中的事件或空词 ε。<br>
+这种产生式从状态 xj0 开始并生成词 w = e01e02 · · · e0k 到达状态 xjk 。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/32e02b0f77d849f89ea12e3b30f1fc83.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_16,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+从 x0 开始并生成词 w = abaa 到达 x0。<br>
+产生式包含 5 个转换，而 |w| = 4。</p>
+<p>由于 ∆ 是一个转移关系（不是函数），所以可以有两个或多个产生式从相同的状态开始并生成相同的词：<br>
+<img src="https://img-blog.csdnimg.cn/1529ab211fac47829b4dbef83f9649c8.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_16,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+也是从状态 x0 开始并生成单词 w = abaa，到达状态 x4 的产生式。</p>
+<p><em><strong>∆ 的传递闭包和自反闭包</strong></em><br>
+为了以更紧凑的方式描述 NFA 的产生式，我们引入以下符号。<br>
+给定一个 NFA G = (X, E, ∆, x0, Xm)，转移关系 ∆ 的传递和自反闭包是关系 ∆∗ ⊆ X × E∗ × X 使得 (x,w, x¯) ∈ ∆∗ 如果存在产生式<br>
+<img src="https://img-blog.csdnimg.cn/1a24ec8033de47eb955b755b2c613b85.png" alt="在这里插入图片描述"><br>
+从 x 开始并生成词 w = e01e02 · · e0k 到达状态¯x。<br>
+按照惯例，(x, ε, x) ∈ ∆∗ 对于所有 x ∈ X =⇒ 从一个状态开始并生成空词（这可能对应于一个 ε 转换或不对应），自动机保持在相同的状态。<br>
+<img src="https://img-blog.csdnimg.cn/668d8c313398452fba4b9dd96f03d17b.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+<em><strong>非确定性有限自动机的语言</strong></em><br>
+<em><strong>生成并接受的词</strong></em><br>
+由于不确定性，必须特别小心对待 NFA 接受的词的概念。<br>
+给定一个 NFA G = (X, E, ∆, x0, Xm)，我们说一个词 w ∈ E∗ 是： 如果存在一个状态 x ∈ X 使得 (x0,w, x) ∈ ∆∗ = ⇒ 存在从初始状态开始生成 w 的产生式； 如果存在状态 x ∈ Xm 使得 (x0,w, x) ∈ ∆∗ =⇒ 存在从初始状态开始生成 w 并到达最终状态的产生式，则接受。<br>
+备注：由于不确定性，可能存在多个产生式，从初始状态生成相同的单词 w。 如果这些产生式中的至少一个产生最终状态，则词 w 被接受。<br>
+<img src="https://img-blog.csdnimg.cn/c1524c18e26348bb9aa3d186c69d90ef.png" alt="在这里插入图片描述"><br>
+词 w = abaa 可以由几个产生式生成，包括：<br>
+<img src="https://img-blog.csdnimg.cn/ae9936c484584cf8b1d07f5ae1aa4e13.png" alt=""><br>
+⇒ 单词abaa 被接受。</p>
+<p><em><strong>生成和接受的语言</strong></em><br>
+给定一个 NFA G = (X, E, δ, x0, Xm) 将它与两种语言相关联。 生成的语言 =⇒ 所有生成词的集合：<br>
+<img src="https://img-blog.csdnimg.cn/62c210495b6141e780e668b7e44d8d75.png" alt="在这里插入图片描述"><br>
+接受的语言 =⇒ 所有接受词的集合：<br>
+<img src="https://img-blog.csdnimg.cn/2d532d4a9a904a11bd72ed12c3ba2ef4.png" alt="在这里插入图片描述"><br>
+=⇒ 对于 DFA，它成立：<br>
+<img src="https://img-blog.csdnimg.cn/78dfdd541f394390988fc8fd04f85627.png" alt="在这里插入图片描述"><br>
+=⇒ 最后，NFA 在字母 E 上接受的语言类别是：<br>
+<img src="https://img-blog.csdnimg.cn/2f962d2b984b4ebb851490ab7e500432.png" alt="在这里插入图片描述"><br>
+它由一些NFA可以接受的所有语言组成。<br>
+<em><strong>NFA 的特性</strong></em><br>
+<em><strong>与 DFA 的差异</strong></em><br>
+状态分类（可达、协同可达、阻塞、死机）以及自动机的分类（可达、协同可达、非阻塞、修剪、可逆）也适用于 NFA =⇒ 它们取决于图形结构。<br>
+但是，由于不确定性，语言属性可能会发生变化。 例如：<img src="https://img-blog.csdnimg.cn/87db1e882ec04167b0963ef9c8367928.png" alt="在这里插入图片描述"><br>
+在这两种情况下都成立。<br>
+相反：“DFA G 是非阻塞的当且仅当 Lm(G) = L(G)”不适用于 NFA =⇒ 相同的词可能由两个或多个产生式生成，一个产生阻塞状态 即使 Lm(G) = L(G) 成立，一个不 =⇒ NFA 的人也可能会阻塞。<br>
+<img src="https://img-blog.csdnimg.cn/9844802253fe4a62ada18b3d3fb9e871.png" alt="在这里插入图片描述"><br>
+<em><strong>DFA 和 NFA 之间的等价性</strong></em><br>
+<em><strong>介绍</strong></em><br>
+定义了两类语言：<br>
+LDFA ：DFA 接受的语言类别；<br>
+LNFA：NFA 接受的语言类别。<br>
+由于 DFA 可以被视为特定的 NFA，因此被 aDFA 接受的任何语言也被 NFA 接受，因此包含 LDFA ⊆ LNFA 成立。<br>
+我们必须证明反向包含 LNFA ⊆ LDFA 也成立。<br>
+=⇒ LNFA = LDFA =⇒ 两个模型 DFA 和 NFA 描述了同一类语言。</p>
+<p><em><strong>LNFA ⊆ LDFA：证明</strong></em><br>
+我们表明，给定一个 NFA G，我们可以确定一个等价于它的 DFA G0 =⇒ G0 接受（相应地，生成）与 G 接受（相应地，生成）相同的语言。<br>
+**基本思想：**假设在 NFA G 中，词 w 可以从初始标记开始由不同的产生式生成，这些产生式达到不同的状态，例如 x1、x2 和 x3。 =⇒ 在 DFA G0 中，将有一个称为 {x1, x2, x3} 的单个状态，并且从初始标记开始生成 w 的单个产生式产生此状态。 =⇒ G0 的任何状态都是 G 的状态子集。</p>
+<p><em><strong>DFA 等价于 NFA：算法</strong></em><br>
+算法：DFA 等价于 NFA。<br>
+输入：NFA G = (X, E, δ, x0, Xm)。<br>
+输出： DFA G0 = (X0 , E0 , δ0 , x00, X0m) 使得 Lm(G0 ) = Lm(G) 和 L(G0 ) = L(G)。</p>
+<ol>
+<li>对于 G 的所有状态 x ∈ X，计算集合 Dε(x) = {x¯ ∈ X | (x, ε, x¯) ∈ ∆∗} 包含从 x 执行零个或多个 ε-转移 [根据定义 x ∈ Dε(x)] 可达到的所有状态。</li>
+<li>对于 G 的所有状态 x ∈ X 和所有符号 e ∈ E 计算集合 De (x) = {x¯ ∈ X | (x, e, x¯) ∈ ∆} 包含从 x 执行一次 e-transition 可到达的所有状态。</li>
+<li>令 x00 = Dε(x0)，即 G0 的初始状态是 G0 中从初始状态 x0 执行零个或多个 ε-转移可到达的状态集合。</li>
+<li>设 X0 = ∅ 且 X0new = {x00}。 （在算法结束时 X0 ⊆ 2X 将包含 G0 的所有状态，而集合 X0new 在每一步都包含 G0 的状态仍有待探索。）</li>
+<li>选择一个状态 x0 ∈ X0new 。<br>
+(a) 对于所有 e ∈ E：<br>
+(i) 定义集合：<br>
+<img src="https://img-blog.csdnimg.cn/960ebba9fddb4c2184567240e3338fda.png" alt="在这里插入图片描述"><br>
+第一组包含从状态 x ∈ x’ 在 G 中可到达的状态，该状态恰好执行一个 e-transition。 第二组包含从状态 x ∈ α(x’ , e) 在 G 中可到达的状态，该状态执行零个或多个 ε 转换（参见下一张幻灯片中的图）。<br>
+(ii) 令 x¯’ = β(x’ ,s) 并定义 δ0 (x’ , e) = ¯x0 。 即，从 G’ 的状态 x’发生的事件 e 产生 ¯x’ 。<br>
+(iii) 若 x¯’ 6∈ X’∪ X0new 则 X’new = X0new ∪ {x¯’}。<br>
+(b) 令 X’ = X’ ∪ {x0’ } 且 X’new = X’new \ {x’ }。<br>
+<img src="https://img-blog.csdnimg.cn/ff6cea3781c343979ace6d383b0b7127.png" alt="在这里插入图片描述"><br>
+如果 G0 的状态 x0 至少包含 G 的一个最终状态，则它是最终状态。</li>
+</ol>
+<p>NFA (a) 和与其等效的 DFA (b)。<br>
+<img src="https://img-blog.csdnimg.cn/3a097c9b06ad44e7a0a0c76c7d4e11d7.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/5eea8a1a3b1a4619a744a0b9b6aa82ae.png" alt="在这里插入图片描述"><br>
+在算法的第 5 步：<br>
+从 X’ 新状态 x00 = {x0, x2, x3} 中选择。<br>
+– 对于事件 a 它持有：<br>
+α(x00, a) = Da(x0) ∪ Da(x2) ∪ Da(x3) = {x4, x5},<br>
+β(x00, a) = Dε(x4) ∪ Dε(x5) = {x4, x5} .<br>
+=⇒ δ0 (x00, a) = x01 = {x4, x5}。<br>
+– 对于事件 b，它成立：<br>
+α(x00, b) = ∅,<br>
+β(x00, b) = ∅。<br>
+=⇒ δ0 (x00, b) 未定义。</p>
+<p>从 X/new 状态 x’1 = {x4, x5} 中选择。<br>
+– 对于事件 a 它持有：<br>
+α(x01, a) = Da(x4) ∪ Da(x5) = {x1, x4},<br>
+β(x01, a) = Dε(x1) ∪ Dε(x4) = {x1, x4}。<br>
+=⇒ δ0 (x00, a) = x02 = {x1, x4}。<br>
+– 对于事件 b，它成立：<br>
+α(x01, b) = Db(x4) ∪ Db(x5) = {x4, x5},<br>
+β(x01, b) = Dε(x4) ∪ Dε(x5) = {x4, x5}。<br>
+=⇒ δ’ (x01, b) = x’1 = {x4, x5}。</p>
+<p>从 X0new 状态 x’2 = {x1, x4} 中选择。<br>
+– 对于事件 a 它持有：<br>
+<img src="https://img-blog.csdnimg.cn/016d37afc980463d9bebede54e19d593.png" alt="在这里插入图片描述"><br>
+对于事件 b，它成立：<br>
+<img src="https://img-blog.csdnimg.cn/82b5052bc042458588cc55dae96711a1.png" alt="在这里插入图片描述"><br>
+在第 7 步，它保持 X0 = {x’, x’1, x’2} =⇒ 因为只有 x’0<br>
+包含 x2（G 的唯一标记状态) =⇒ X’m = {x’0}。<br>
+<img src="https://img-blog.csdnimg.cn/a61fea40ddf24597ac2797e846d87e90.png" alt="在这里插入图片描述"><br>
+<em><strong>两个等价自动机的状态数</strong></em><br>
+通常，人们无法先验地判断两个自动机中哪一个具有最多的状态。 唯一的一般结果如下。 =⇒<br>
+给定基数为 n 的状态集 X 的 NFA G，让基数为 n’ 的状态集 X0 的 G0 是按照前面的算法构造的等效 DFA。 =⇒ 它持有 n’ &lt; 2n。<br>
+证明：X0 中的每个状态都是X 中状态的一个非空子集。X 的可能子集数包括空集为2n。<br>
+=⇒ 在最坏的情况下，等效 DFA 的状态集的基数可以等于 2n - 1，即它可能随着 NFA 的状态数呈指数增长。</p>
+<h2><a id="5___638"></a>5 - 模块化合成</h2>
+<p><em><strong>由多个子系统组成的系统模型</strong></em><br>
+一个复杂的系统通常由几个更简单的子系统组成<br>
+他们之间的互动。<br>
+我们展示了一种通过模块化合成来构建整个系统模型的技术，即，适当地组合子系统（模块）的模型。<br>
+我们假设每个模块都由 DFA 描述 =⇒ 整个系统的模型是使用 ||表示的并发组合构建的 DFA。</p>
+<p>并发组合运算符已被定义为语言运算符 =⇒ 在这里我们表明它在 DFA 的转换结构上也有一个自然对应物。<br>
+为了简单起见，我们考虑两个模块组合的情况，但我们所展示的可以推广到两个以上模块的组合。</p>
+<p><em><strong>两个 DFA 的并发组合</strong></em><br>
+<em><strong>初步定义</strong></em><br>
+考虑两个模块（即 DFA）G’ 和 G’’，它们的字母表是，<br>
+分别为 E’ 和 E’’ 。<br>
+令 E = E’ ∪ E ‘’ 为两个字母的并集； 这个集合可以分为三个不相交的子集：<br>
+E’ \ E ‘’ 中的符号，即仅属于 G’ 的第一个字母 =⇒ 私人事件的符号。<br>
+E ‘’\ E’ 中的符号，即仅属于 G’’ 的第二个字母 =⇒ 私人事件的符号。<br>
+E’ ∩ E ‘’ 中的符号，即两个字母表共有的符号 =⇒ 同步事件。</p>
+<p><em><strong>私人活动和同步活动</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/f31779dc412d4ad1816a6f289f361554.png" alt="在这里插入图片描述"><br>
+G’的私人事件：E’\E’‘中的符号。<br>
+G’‘的私人事件：E’’\E’中的符号。<br>
+同步事件：E’ ∩ E’’ 中的符号。</p>
+<p><em><strong>G’和G ''的组成</strong></em><br>
+整个系统 G，其状态空间表示为 X，由<br>
+模块 G’ 和 G’’ 的组合，其状态空间分别表示为 X’ 和 X’’ 。<br>
+它包含 X ⊂ X’ × X’’ ，即 G 的状态采用 x = (x’ , x’’ ) ∈ X 的形式，其中 x’ ∈ X’ 和 x’’ ∈ X ‘’ 。<br>
+一个模块私有的事件可以在该模块处于事件活动状态时发生，而不管另一个模块处于何种状态 =⇒ 一个模块的私有事件被另一个模块忽略。</p>
+<p>同步事件只有在两个模块都处于事件激活的状态时才能执行； 此外，它必须在两个模块上同时执行（因此名称同步）=⇒ 如果w是由G生成的单词，则其在字母表 E’和E ‘‘上的投影将分别是由 G’ 和 G’’ 生成的单词。<br>
+定义：设 G’和 G’’ 为两个 DFA。 它们的并发组合（或乘积）是生成语言 L(G) = L(G’ ) k L(G’’ ) 并接受语言 Lm(G) = Lm(G’ ) k Lm(G’’)。 =⇒ 新的 DFA 表示为 G = G’ || G ‘’ 。</p>
+<p><em><strong>计算 G = G’ || G’’ 的算法</strong></em><br>
+输入：两个 DFA G’ = (X’ , E’ , δ’ , x’0, X’m) 和 G’’= (X’’, E’’, δ’’, x’‘0, X’‘m)<br>
+输出：A DFA G = (X, E, δ, x0, Xm) 与 L(G) = L(G’) || L(G’’ ) 和Lm(G) = Lm(G’ ) || Lm(G’’ ).</p>
+<ol>
+<li>设 E = E0 ∪ E00 。</li>
+<li>令 x0 = (x’0, x’‘0 ) （G 的初始状态由 G’ 和 G’’ 的初始状态 8 的笛卡尔积给出。）</li>
+<li>设 X = ∅ 且 Xnew = {x0}。（在算法结束时 X ⊆ X’ × X’’ 将包含 G 的所有状态，而集合 Xnew 在每一步都包含 G 的状态仍有待探索。）</li>
+<li>选择一个状态 x = (x’ , x’’ ) ∈ Xnew 。<br>
+(a) 对于所有 e ∈ E：<br>
+i.让:<br>
+<img src="https://img-blog.csdnimg.cn/22359b3d33574c50bb227f9ab9055bfb.png" alt="在这里插入图片描述"><br>
+ii. 如果状态¯x = δ(x, e) 被定义并且¯x 6∈ X ∪ Xnew 那么Xnew = Xnew ∪ {x¯}。<br>
+(b) 设 X = X ∪ {x} 且 Xnew = Xnew \ {x}。</li>
+<li>如果 Xnew 6 = ∅ 则转至 4。</li>
+<li>令 Xm = X∩ (X’m × X’‘m) （如果 G 的状态 x 是 G’ 的最终状态和 G’’ 的最终状态的笛卡尔积，则 G 的状态 x 是最终的。）</li>
+</ol>
+<p><em><strong>例子</strong></em><br>
+考虑一个由机器人和容量为 2 的缓冲器组成的制造单元。<br>
+机器人从始终装满的传送带上拾取零件（事件 a）并将它们放入缓冲区（事件 b）。 可以采取缓冲区中的部分（事件 c）离开单元格：<br>
+<img src="https://img-blog.csdnimg.cn/99e19198b3984e2d853f101fbb2e042b.png" alt="在这里插入图片描述"><br>
+<em><strong>示例：两个模块</strong></em><br>
+图 (a) 中字母表 E0 = {a, b} 上的 DFA 描述了状态为空闲 (x’0) 和工作 (x’1) 的机器人。<br>
+图 (b) 中字母表 E’’= {b, c} 上的 DFA 描述了缓冲区，其状态由它包含的部分数量 k 给出（对于 j = 0, 1, 2，x’‘j）。<br>
+<img src="https://img-blog.csdnimg.cn/741ecbe78f5743998ef321a3f5b4d5fa.png" alt="在这里插入图片描述"><br>
+<em><strong>示例：整个系统</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/9e5e6ea6729341fa998f7006681ea2fe.png" alt="在这里插入图片描述"><br>
+<em><strong>示例：算法的执行</strong></em><br>
+步骤 1：G 的字母表定义为 E = {a, b, c}。<br>
+步骤 2：G 的初始状态定义为 x0 = (x00, x000 )。<br>
+步骤 3：我们令 X = ∅ 且 Xnew = {(x00, x000 )}。<br>
+步骤 4：我们选择 (x00, x000 ) ∈ Xnew 。<br>
+G0 的私有事件 a 在 x00 中活跃并产生 x01，因此 δ((x’0, x’‘0 ), a) = (x’1, x’‘0 )，我们添加 (x’1, x’‘0) 来设置 Xnew .G’0 的私有事件 c 在 x’‘0 中不活跃，因此 δ((x’0, x’‘0 ), c) 是未定义的。<br>
+同步事件b在x’0中不活跃，在 x’‘0中活跃，因此 δ((x’0, x’‘0 ), b) 未定义：实际上，要定义事件必须在两个模块中都处于活动状态。<br>
+我们将状态 (x’0, x’‘0) 从 Xnew 移动到 X。<br>
+步骤 5 ：由于 Xnew = {(x’1, x’‘0 )}，我们回到第 4 步。<br>
+再次执行第 4 步：我们选择 (x01, x’‘0 ) ∈ Xnew 。<br>
+G’ 的私有事件 a 在 x’1 中不活跃，因此 δ((x’1, x’‘0 ), a) 是未定义的。<br>
+G’0 的私有事件 c 在 x’‘0 中不活跃，因此 δ((x’1, x’‘0 ), c) 未定义。<br>
+同步事件 b 在 x’1 中活跃产生 x’0，也在 x’‘0 中活跃产生 x1’’，因此 δ((x’1, x’‘0 ), b) = (x’0, x1’’ )，我们将 (x’0, x1’’) 添加到 setXnew 。<br>
+我们将状态 (x’1, x’‘0) 从 Xnew 移动到 X。<br>
+… 我们不断重复循环直到 Xnew = ∅。<br>
+<em><strong>步骤总结：</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/4268b8449e244a149042dbb85e3c0942.png" alt="在这里插入图片描述"><br>
+组合系统状态空间的基数<br>
+如果我们用 n’ 和 n’’ 表示 G’ 和 G’’ 的状态数，它们的并发组合 G 最多可以有 n’ × n’’ 个状态，因为 X ⊆ X’ × X’’。<br>
+假设现在我们有 k 个模块，每个模块有 n 个状态，它们的并发组合最多可以有 nk 个状态。 ⇒ 组合系统的状态空间的基数可以随着组成系统的模块数量呈指数增长 ⇒ 状态空间的爆炸：处理 DFA 时的主要问题之一，可以使用 Petri 网部分缓解。</p>
+<p><em><strong>关于 DFA 交集的注解</strong></em><br>
+我们已经看到，具有相同字母表的两种语言的并发组合是两种语言的交集。⇒ 上面的算法（计算 DFA 的并发组合）也可以用来确定 G = G’∩ G’’ ，即接受（resp.，生成）所接受语言（resp.，生成）的交集的 DFA G 由两个DFA G’ 和G’。</p>
+<h2><a id="6___721"></a>6 - 监督控制</h2>
+<p><em><strong>控制逻辑DES的通用框架</strong></em><br>
+本章专门介绍源自 Ramadge 和 Wonham (1989) 工作的监督控制理论。<br>
+这些作者定义了一个控制逻辑离散事件系统的通用框架，受到了很多关注。<br>
+遵循时间驱动系统的经典反馈控制范式，在监督控制理论中，人们考虑一个被控对象，即一个被控制的系统，其演化由称为监督者的控制代理引导。<br>
+以下反馈方案显示了闭环系统，即受监督者行动影响的工厂。</p>
+<p><em><strong>反馈方案</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/e491c0f516ae40e9bbaa160c57f413d8.png" alt="在这里插入图片描述"><br>
+监督员观察工厂产生的事件并指导其发展禁用一些事件，即防止它们的发生。<br>
+=⇒ 主管只能限制工厂的行为，但不能扩展它 =⇒ 闭环系统无法生成工厂语言中不存在的单词。</p>
+<p><em><strong>工厂、主管和闭环系统</strong></em><br>
+<em><strong>反馈控制方案的组成部分</strong></em><br>
+我们现在讨论反馈控制方案的不同组成部分：<br>
+<img src="https://img-blog.csdnimg.cn/929d73757e9a4304bc4c4469864645e6.png" alt="在这里插入图片描述"><br>
+植物<br>
+可控事件和不可控事件<br>
+导师<br>
+控制输入</p>
+<p><em><strong>植物</strong></em><br>
+在监督控制理论中，过程 G 是一个被控制的系统。 它的行为由它可以在字母 E 上生成的事件序列（即语言）描述。<br>
+两种语言可以与一个工厂相关联：<br>
+封闭行为 L(G) ⊆ E*：由系统可能生成的事件序列集合组成的前缀封闭语言；<br>
+标记行为 Lm(G) ⊆ L(G)：由系统生成的事件序列组成的语言，这些事件对应于某些任务的完成。<br>
+使用确定性有限自动机 (DFA) 对植物 G 进行建模是很自然的：其封闭行为对应于生成的语言 L(G)，其标记行为对应于接受的语言 L(G)。</p>
+<p><em><strong>可控事件和不可控事件</strong></em><br>
+植物事件 E 的字母表划分如下<br>
+E = Ec ∪ Euc（其中 Ec ∩ Euc = ∅）<br>
+其中 Ec 是可控事件的集合，Euc 是不可控事件的集合。 当工厂准备好执行可控事件 e ∈ Ec 时，监督者可以禁用该事件，即防止它发生。 相反，监督者无法阻止不可控事件 e’ ∈ Euc 的发生。</p>
+<p><em><strong>示例：由 DFA 表示的植物 G</strong></em><br>
+字符“:”表示可控事件。 E = {a, b, c, d, e, f } 被划分为 Ec = {a, b, d, f } 和 Euc = {c, e}。<br>
+<img src="https://img-blog.csdnimg.cn/9174334a54624b90b65dad8f85e2d76f.png" alt="在这里插入图片描述"><br>
+<em><strong>示例：印刷机</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/43743dbca9e643129e73636d1e30e1ee.png" alt="在这里插入图片描述"><br>
+x0：空闲       a：着墨<br>
+x1：准备打印 b：开始打印<br>
+x2：打印       c：正确完成打印<br>
+x3：离线       d：停止打印<br>
+e：打印错误<br>
+f : 维护<br>
+<img src="https://img-blog.csdnimg.cn/1503c24c056540f8a03402b98b7d8c4e.png" alt="在这里插入图片描述"><br>
+Xm = {x0} =⇒ 机器应该回到空闲状态。<br>
+a：上墨可控<br>
+b：开始打印可控<br>
+c：正确完成打印不可控<br>
+d：停止打印可控<br>
+e：印刷错误不可控<br>
+f : 维护可控</p>
+<p><em><strong>主管和活动事件</strong></em><br>
+我们假设监督者观察事件词 w ∈ L(G)<br>
+由设备 G 生成，并基于此决定启用哪些可控事件。<br>
+<img src="https://img-blog.csdnimg.cn/515075290f5f4452a4650b2e5f65f145.png" alt="在这里插入图片描述"><br>
+为了形式化监督者的行动，引入活动事件的定义是很有用的 =⇒</p>
+<p><em><strong>活动事件</strong></em><br>
+考虑 DFA G = (X, E, δ, x0, Xm)。 对于每个状态 x ∈ X，在状态 x 在 G 中活动的事件集是 AG (x) = {s ∈ E | δ(x,s) 被定义 }。<br>
+对于每个单词 w ∈ L(G)，在 w 之后 G 中活动的事件集是 AG (w) = {e ∈ E | we∈ L(G)}。<br>
+备注：在上面的定义中，为了简单起见，相同的符号 AG 用于表示两个不同的函数：映射 AG : X → 2E 和映射 AG : L(G) → 2E 。<br>
+显然，对于 DFA G，如果从初始状态 x0 达到状态 x = δ∗(x0,w)，则生成单词 w =⇒ AG (w) = AG (x)。</p>
+<p><em><strong>活动事件：示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/7de13564b44b4b479d4973eec3055fce.png" alt="在这里插入图片描述"><img src="https://img-blog.csdnimg.cn/844c9fb4d9434dfda63b46de48ab4216.png" alt="在这里插入图片描述"><br>
+<em><strong>导师</strong></em><br>
+在植物生成单词 w ∈ L(G) 后：<br>
+监督者可以禁用主动可控事件 e ∈ AG (w) ∩ Ec =⇒ 监督者可以阻止它发生。<br>
+相反，监督者无法阻止主动不可控事件 e0 ∈ A(w) ∩ Euc 的发生。<br>
+没有被监管者禁用的事件称为启用。</p>
+<p><em><strong>控制输入</strong></em><br>
+给定字母 E 上的植物 G，控制输入是事件 ξ ⊆ E 的子集。<br>
+如果 e ∈ ξ =⇒ e 被监督者启用，<br>
+如果 e 6∈ ξ =⇒ e 被禁用。<br>
+我们用 2E 表示所有可能的控制输入的集合。<br>
+由于监管者无法禁用不可控事件，因此适用以下定义。<br>
+给定一个植物 G 和一个词 w ∈ L(G)，如果 Euc ∩ AG (w) ⊆ ξ =⇒ 它包含在 w 之后在 G 中活动的所有不可控事件，则称控制输入 ξ 在 w 之后是可接纳的。</p>
+<p><em><strong>允许的控制输入：示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/31f71cb11f27403a9285337e3bec6743.png" alt="在这里插入图片描述"><br>
+ξ = {a, b, c} 在 a =⇒ AG (a) = {b, d} 之后是允许的，因此，在所有活动事件中，只有可控事件 d 被禁用。<br>
+ξ = {a, b, c} 在 ab =⇒ AG (ab) = {c, e} 之后是不允许的，因此，它禁用了不可控的活动事件 e。</p>
+<p><em><strong>主管：正式定义</strong></em><br>
+控制工厂 G 的监督者 S 可以用控制函数<br>
+f : L(G) −→ 2E 表示，<br>
+它生成一系列可允许的控制输入 ξ0 = f (ε), ξ1 = f (e1), ξ2 = f ( e1e2), · · ·<br>
+响应由植物产生的事件序列 w = e1e2 · · · ∈ L(G)。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/ddf0092e15964241bc991b85a485dcd7.png" alt="在这里插入图片描述"><br>
+x0：空闲 a：着墨 e：打印错误<br>
+x1：准备打印 b：开始打印 f：维护<br>
+x2：打印 c：正确完成打印<br>
+x3：离线 d：停止打印</p>
+<p><strong>目标</strong>：每次给印刷机上墨，最多可以进行一次印刷操作<br>
+执行，以确保高质量的打印。 =⇒ 在每个 a 之后最多可能出现一个 b，直到观察到一个新的 a。<br>
+目标：在每个 a 之后最多可能出现一个 b，直到观察到一个新的 a。<br>
+<img src="https://img-blog.csdnimg.cn/9ea8524f8e67485e8a8cf8199cf8ab3b.png" alt="在这里插入图片描述"><br>
+<strong>监督者作为 DES 和闭环系统</strong><br>
+作为 DFA 的主管<br>
+可以将监督者表示为离散事件系统，即作为 DFA S = (Xˆ, E, ˆδ, xˆ0, Xˆm) 在植物 G = (X, E, δ, x0, Xm) 的相同字母表上 ）。<br>
+这是 DFA 主管的工作方式：<br>
+植物每次产生一个事件时，都会产生相同的事件<br>
+由主管执行。<br>
+当监督者处于给定状态 x 时，它向工厂发送控制输入 AS ( x )，其中包含状态 x 中在 S 中活动的所有事件。<br>
+=⇒ 以下过程描述了闭环系统的演变。</p>
+<p>闭环系统的演变<br>
+给出了由监督者 S = (Xˆ, E, ˆδ, xˆ0, Xˆm) 控制的植物 G = (X, E, δ, x0, Xm)。<br>
+1 最初，工厂 G 处于状态 x = x0，而监督者处于状态 xˆ = ˆx0。<br>
+2 令 w = ε。<br>
+3 监督者产生控制输入 ξw = AS (ˆx)。<br>
+4 植物产生事件 e ∈ AG (x) ∩ ξw 并进入状态 x0 = δ(x, e)。<br>
+5 监督者执行事件 e 并进入状态 ˆx0 = δˆ(ˆx, e)。<br>
+6 设 w = we, x = x0 , ˆx = ˆx0 。<br>
+7 转到 3</p>
+<p>目标：在每个 a 之后最多可能出现一个 b 直到观察到一个新的 a<br>
+<img src="https://img-blog.csdnimg.cn/fef6c5b75aa047e2b99d19fbe419b852.png" alt="在这里插入图片描述"><br>
+<em><strong>闭环系统</strong></em><br>
+将主管表示为 DFA 的优势：立即确定代表闭环系统的 DFA。<br>
+=⇒ 闭环系统生成的单词 w 既是 G 的单词（因为系统生成）又是 S 的单词（因为在每一步生成的事件都属于控制输入，因此它在 S 中是活动的 ）。<br>
+考虑一个由监督者 S 控制的工厂 G。闭环系统是自动机 S/G = G ∩ S = G k S，其封闭语言为 L(S/G) = L(G) ∩ L(S) 其标记语言为 Lm(S/G) = Lm(G) ∩ Lm(S)。<br>
+请注意，我们可以写成 G ∩ S = G k S 因为 S 和 G 具有相同的字母表。</p>
+<p><em><strong>非评分监督员和评分监督员</strong></em><br>
+当我们考虑 DFA 主管 S 时，有两种可能性。<br>
+<strong>非标记主管。</strong> 主管没有指定哪些词是最终的，并且所有在工厂中产生最终状态的词都被认为是最终的。 =⇒ Xˆm = Xˆ（它的所有状态都是最终的）=⇒ 闭环系统的标记语言是 <img src="https://img-blog.csdnimg.cn/e7381063c6ea47899283f61ac676924b.png" alt="在这里插入图片描述"><br>
+即，包含工厂接受并在监督下存活的所有单词。<br>
+<strong>标记主管。</strong> 监督者指定哪些词是最终的，因此如果一个词在工厂和监督者上都产生最终状态，那么它就是最终的。 =⇒ 监督者的最终状态集是 Xˆm ( Xˆ (并非所有状态都是最终的)。</p>
+<p><em><strong>示例：闭环系统</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/30af3f2a8b924c8ab174e9040a0846c9.png" alt="在这里插入图片描述"><br>
+<em><strong>控制规格</strong></em><br>
+<em><strong>状态规范</strong></em><br>
+规范描述了受控系统的期望行为 =⇒ 监督者必须确保闭环系统满足这样的规范 =⇒ 我们考虑状态规范和语言规范。<br>
+状态说明：给定一个状态空间为 X 的工厂，状态说明由合法状态的集合 L ⊆ X 组成。<br>
+<img src="https://img-blog.csdnimg.cn/5274e0890b3a4562b42da777bea3ebd8.png" alt="在这里插入图片描述"><br>
+集合 F = X \ L 中的状态称为禁止状态。</p>
+<p><em><strong>语言规范</strong></em><br>
+语言规范：给定语言为 L(G) ⊆ E* 的植物，语言规范由合法词的语言 K ⊆ E* 组成。<br>
+<img src="https://img-blog.csdnimg.cn/3fec69a2d0b04404819765abcb555a6f.png" alt="在这里插入图片描述"><br>
+LK = L(G) ∩ K 中由植物产生的也是合法的字符串称为允许词。<br>
+FK = L(G) \ K 中由植物产生但不合法的字符串称为禁用词。</p>
+<p><em><strong>状态规范的监督设计</strong></em><br>
+<em><strong>状态规范的控制问题</strong></em><br>
+问题陈述：考虑具有一组状态 X 的工厂 G 并假设规范包含一组合法状态 L ⊆ X。找到一个最大允许的监督者 S，使得闭环系统永远不会在 F = X \ L。<br>
+我们需要初步引入弱禁止状态的概念。 =⇒</p>
+<p><em><strong>弱禁止状态</strong></em><br>
+给定一个植物 G = (X, E, δ, x0, Xm) 和一组合法状态 L，我们定义弱禁止状态集合<br>
+<img src="https://img-blog.csdnimg.cn/29f8c0869cdb4e40b67c0abd05af18af.png" alt="在这里插入图片描述"><br>
+包含植物的所有合法状态，从中可以通过仅包含不可控事件的序列到达禁止状态。<br>
+<img src="https://img-blog.csdnimg.cn/61f64ab3cae241e4820ed291aacb7927.png" alt="在这里插入图片描述"><br>
+<em><strong>最大允许监督者</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/5ae6a0298f34473ba35068cf7c8fe527.png" alt="在这里插入图片描述"><br>
+在出现无法控制的事件时，主管必须确保工厂不会达到任何禁止或弱禁止状态。 =⇒<br>
+如果监督者仅防止达到禁止或弱禁止状态，则它是最大允许的。</p>
+<p><em><strong>状态规范的监督设计</strong></em><br>
+输入：植物G； 状态规范 L ⊆ X<br>
+输出：一个最大允许的监督者 S，它也是闭环系统 S/G。 1 计算 F ∪ Fweak ，G 的一组禁止和弱禁止状态。 2 如果 G 的初始状态属于 F ∪ Fweak 则返回：没有解。<br>
+3 Trim G 移除 F ∪ Fweak 中的所有状态及其输入和输出弧。<br>
+4 剩下的结构是S，也是S/G。<br>
+如果最终的自动机 S 包含一些无法到达的状态，则可以进一步修剪以将其删除。</p>
+<p><em><strong>示例：物料搬运系统</strong></em><br>
+该系统由两个在两条不同轨道上移动的 AGV（自动导引车）组成。<br>
+第一台 AGV G1 服务于四个站点（A、B、C 和 D）。 第二台 AGV G2 服务于两个站点（D 和 E）。<br>
+<img src="https://img-blog.csdnimg.cn/6c6fc5ea99d345cf89a7960d8ab57a53.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/70055d0c442841eab8f249323e27b16a.png" alt="在这里插入图片描述"><br>
+两台AGV的DFA模型=⇒我们假设AGS G1的初始和最终位置在A站，而AGS G2的初始和最终位置在E站。<br>
+G1 的字母表是 E1 = {a, b, c, d}。<br>
+G2 的字母表是 E2 = {e, f }。<br>
+我们假设事件 b 和 c 是不可控的。</p>
+<p>我们通过并发组合构建植物模型 G = G1 k G2 在字母表上 E = E1 ∪ E2 = {a, b, c, d, e, f }。<br>
+<img src="https://img-blog.csdnimg.cn/c14bed59e0f44bd88612f21c966366dc.png" alt="在这里插入图片描述"><br>
+这里一个状态，比如说，AE 表示第一个 AGV 在站 A，第二个在站 E。</p>
+<p>规范：两台AGV不能同时在D站，以免发生碰撞。 =⇒ 一组合法状态：<br>
+<img src="https://img-blog.csdnimg.cn/a51746166e7b4e2e9061e5e0eac32308.png" alt="在这里插入图片描述"><br>
+b 和 c 是不可控事件 =⇒<br>
+BD 和 CD（浅红色）是弱禁区。</p>
+<p>去除禁止和弱禁止状态，我们得到监督者 S：<br>
+<img src="https://img-blog.csdnimg.cn/a9c67c2a49a245b69c9358534ee64b08.png" alt="在这里插入图片描述"><br>
+关于监督者 S 的备注</p>
+<ol>
+<li>使用上述算法得到的监督者 S 是： 可接纳的，即它只禁用可控事件； 正确，即禁用所有导致禁止状态的事件发生； 最大允许，即它仅禁用导致禁止或弱禁止状态的事件发生。</li>
+<li>闭环系统 S/G 与监督者 S 重合。 =⇒ 由于 S 细化 G，则 L(S) ⊆ L(G) 和 Lm(S) ⊆ Lm(G)。 =⇒ 闭环系统 S/G = G|| S = G ∩ S 有闭合语言 L(S/G) = L(G) ∩ L(S) = L(S) 和标记语言 Lm(S/G) ) = Lm(G) ∩ Lm(S) = Lm(S)。</li>
+</ol>
+<p><em><strong>语言规范的监督设计</strong></em><br>
+<em><strong>语言规范的控制问题</strong></em><br>
+问题陈述：考虑具有语言 L(G) ⊆ E∗ 的植物 G，并且语言规范由合法词 K ⊆ E∗ 的前缀封闭集组成。 找到一个最大允许的监督者 S，使得 L(S/G) ⊆ K。<br>
+=⇒ 我们想要找到一个监督者 S，使得闭环系统只在 LK = L(G) ∩ K 中生成允许的单词。</p>
+<p><em><strong>弱禁词</strong></em><br>
+为了防止到达禁止词，有必要在生成允许词 w0 ∈ LK 后，禁止触发所有产生禁止词 w = w’ e ∈ FK 的事件 e。<br>
+然而，可能会发生这样的情况，一旦生成了一个允许词 w0，就存在一个不可控序列 wuc（即由一个或多个不可控转换组成的序列），使得 w = w’ wuc ∈ FK 是一个禁止词，这样一个序列 不能被主管禁用。 我们需要引入弱禁词的概念。 =⇒</p>
+<p>给定植物 G = (X, E, δ, x0, Xm) 和前缀封闭语言规范 K，我们定义弱禁止词集<img src="https://img-blog.csdnimg.cn/780ce3e8f7944b53bfb00496dff5c87b.png" alt="在这里插入图片描述"><br>
+包含所有允许的词，这些词可以通过一个仅包含不可控事件的序列在禁止词中继续。<br>
+<img src="https://img-blog.csdnimg.cn/64dc629d524e4712a194afccd6773c75.png" alt="在这里插入图片描述"><br>
+最大允许监督者<br>
+如果监督者仅防止生成禁止或弱禁止词，则其最大程度地允许。<br>
+我们现在讨论如何设计一个最大许可的监督者。<br>
+为了解决这个问题，我们使用 DFA 来表示语言规范。</p>
+<p><em><strong>规格自动机</strong></em><br>
+定义：给定一个语言规范 K ⊆ E∗ ，对应的规范自动机 H = (X0 , E, δ0 , x00, X0m) 使得 Lm(H) = K 和 L(H) = ¯K =⇒ 这个 DFA 接受 K 并生成其所有前缀。<br>
+请注意，当 K 是前缀闭合时，它持有 Lm(H) = L(H) = K 因此 X0m = X0 ，即 H 的所有状态都是最终状态。</p>
+<p><em><strong>示例：制造单元</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/559a688534dd4a7cbb7cb8daf46c33cb.png" alt="在这里插入图片描述"><br>
+两个主要组件：机器和机器人。<br>
+机器装载零件 (a) 并在加工后 (b) 将其输出到缓冲器 © 中。<br>
+机器人从缓冲器 (d) 中取出一部分并将其 (e) 移至传送带上，然后将其带走。<br>
+<img src="https://img-blog.csdnimg.cn/660c8e4e7ecb4e83b9c357e52e85dee8.png" alt="在这里插入图片描述"><br>
+字母表 E1 = {a, b, c} 上的 G1 描述了机器。<br>
+字母表 E2 = {d, e} 上的 G2 描述了机器人。</p>
+<p><img src="https://img-blog.csdnimg.cn/8ffa6b2dd37b465eabcbc8b685c5dc23.png" alt="在这里插入图片描述"><br>
+植物是由DFA G = G1 || G2 在字母表E = E1 ∪ E2 上描述的，由两个模块同时组合获得。<br>
+一组可控事件：Ec = {a, d}。<br>
+一组不可控事件：Euc = {b, c, e}。</p>
+<p>规范：只有在机器生产出零件 © 后，机器人才应开始移动操作 (d)。 此外，由于缓冲区的容量为 1，因此只有在机器人取走前一个零件后，机器才应将新零件放入缓冲区。<br>
+<img src="https://img-blog.csdnimg.cn/2d9656f253a04d67a588356e761296e6.png" alt="在这里插入图片描述"><br>
+事件 c 和 d 应以 c 开始交替执行。<br>
+<img src="https://img-blog.csdnimg.cn/30492f7040c343dbb94751fdb584f873.png" alt="在这里插入图片描述"><br>
+<em><strong>弱禁词</strong></em><br>
+使用规范自动机作为监督者似乎很自然 =⇒ 闭环系统 G || H 生成语言<br>
+L(G) ∩ L(H) = L(G) ∩ K = LK 只包含可接受的词。<br>
+然而，使用 H 作为监督者可能是不可能的，因为不能保证 H 只产生可接受的控制输入，即它可能会尝试禁用不可控的转换以避免生成禁止词。<br>
+显然，如果存在弱禁止词，就会发生这种情况。</p>
+<p><em><strong>可接受的 DFA</strong></em><br>
+定义：设 G 为一株植物。 一个自动机 H 被称为 G 的可接纳自动机<br>
+如果用作主管时总是产生可接受的控制输入。<br>
+性质：可以检查给定的自动机 H 是否可用于植物 G。<br>
+该过程需要构造组合自动机 F = G k H 以生成允许的词集 LK 。 =⇒ 通过构造这个自动机的每个状态都是一对 (x, x0 )，其中 x ∈ X 是 G 的状态，x0 ∈ X0 是 H 的状态。</p>
+<p><em><strong>F = G || H 的不可控和弱可控状态</strong></em><br>
+以下定义描述了以下情况<br>
+由于弱禁止词的存在，规范自动机可能不会产生可接受的控制输入。<br>
+定义：组合自动机 F = G || H 的状态 (x, x0 ) 称为：<br>
+不可控，如果存在 e ∈ Euc 使得 e ∈ AG (x) ∧ e 6∈ AF ((x, x0 ))，=⇒ 不可控事件 e 在状态 x 在 G 中是活动的，但在状态 (x) 的 F 中不活动 , x0 );<br>
+如果存在一个（可能是空的）词 w ∈ E∗ uc 的不可控事件 w，在 F 中从状态 (x, x0 ) 产生一个不可控的状态，则弱不可控。</p>
+<p>物理意义：<br>
+达到不可控状态，生成允许词 w’，使得不可控事件 euc 的发生产生禁止词 w = w’ euc 。<br>
+达到弱不可控状态，生成一个允许词 w’，使得一系列不可控事件 euc 的发生产生一个禁止词 w’ euc。<br>
+显然，所有生成的达到弱不可控状态的词都是弱禁止的。</p>
+<p>我们表示<br>
+U：不可控状态集合，<br>
+Uweak 弱不可控状态集合。<br>
+根据定义：U ⊆ Uweak 成立。<br>
+命题：当且仅当组合自动机 F = G k H 没有不可控状态时，规范自动机 H 对于工厂 G 是可接纳的。</p>
+<p><em><strong>示例：制造单元</strong></em><br>
+考虑工厂 G 和规范自动机 H：<br>
+<img src="https://img-blog.csdnimg.cn/e8e091f41cb64bc2a7bae5be8306430d.png" alt="在这里插入图片描述"><br>
+我们想确定规范自动机 H 是否可以接受 =⇒ 我们计算组合自动机 F = G k H（忽略标记为 c 的虚线）。<br>
+<img src="https://img-blog.csdnimg.cn/415b6aa62a944eafb91ecfacc9dcc222.png" alt="在这里插入图片描述"><br>
+xij,k 表示状态 (xij , x0k)，其中 G 处于状态 xij 并且 H 处于状态 x0k 。</p>
+<p>对于 Euc = {b, c, e} 中的每个不可控事件，我们列出 G 处于活动状态时的状态。<br>
+<img src="https://img-blog.csdnimg.cn/1e41301c28204df19a610706931205b5.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/f788c4702a2a472ab6470818a9d2dacc.png" alt="在这里插入图片描述"><br>
+对于第一个分量是 x10 或 x11 的所有状态，b 不会导致 F =⇒ 中的不可控状态，此类事件在 F 中启用。<br>
+<img src="https://img-blog.csdnimg.cn/669347e3d1b9491a8900b86bb76f5ec8.png" alt="在这里插入图片描述"><br>
+c 导致 F =⇒ c 中的不可控状态在 x20,1 和 x21,1 =⇒ x20,1 和 x21,1 是不可控状态。<br>
+x10,1 和 x11,1 是弱不可控状态：从它们开始 wuc = b 导致不可控状态。<br>
+<img src="https://img-blog.csdnimg.cn/fb1d7937628b447181e3131a7b237dc2.png" alt="在这里插入图片描述"><br>
+对于 F 中第一个分量为 x01、x11 或 x21 的所有状态，e 不会导致 F =⇒ 中的不可控制状态，e 在 F 中启用。</p>
+<p>结论：<br>
+规范自动机 H 是不可接受的，因为它包含不可控状态 U = {x20,1, x21,1}。<br>
+较大的一组弱不可控状态是<br>
+<img src="https://img-blog.csdnimg.cn/2a79a3f34c70498db8b1c7560a30045b.png" alt="在这里插入图片描述"><br>
+所有导致微弱无法控制状态的词都被弱禁止 =⇒ 见下一张幻灯片中的例子</p>
+<p><img src="https://img-blog.csdnimg.cn/9368542468ff44aca54319fb8b17e4f7.png" alt="在这里插入图片描述"><br>
+考虑从初始状态开始产生 x10,1 的 w0 = abca。<br>
+w’ = abca 是弱禁止的，因为它可以用 wuc = bc 继续到禁止词 w = w’ wuc = abcabc 对应于在机器人移除第一部分之前机器已将第二部分放入缓冲区的事实 .</p>
+<p><em><strong>设计主管</strong></em><br>
+如果规范自动机是可接受的，那么它就是期望的监督者。<br>
+如果不是，则需要进一步限制植物行为，以确保不会产生弱禁止词。<br>
+以下算法显示了如何设计监督者。</p>
+<p><em><strong>算法：语言规范的监督设计</strong></em><br>
+输入：植物G； 由规范自动机 H 描述的语言规范 K ⊆ E*。<br>
+输出：一个最大允许的监督者 S 和闭环系统 S/G。<br>
+1 构造组合自动机 F = G || H。<br>
+2 计算 Uweak ，F 的一组弱不可控状态。<br>
+3 如果 Uweak = ∅ 则返回：S = H，因为 H 是可接受的，可以用作监督者； S/G = F，即 F 描述了闭环系统。<br>
+4 如果F的初始状态属于Uweak则RETURN：无解。<br>
+5 Trim F 移除 Uweak 中的所有状态及其输入和输出弧。<br>
+6 剩下的结构是S，也是S/G。</p>
+<p>上述算法的工作原理如下。<br>
+首先，它检查规范自动机 H 是否可接受：在这种情况下，它可以用作监督者，即 S = H 并且通常闭环系统是 S/G = G k S = F 。<br>
+如果 F 具有弱不可控状态（即存在弱禁止词），则必须避免到达它们。<br>
+通过从所有这些状态中修剪它，我们有一个自动机，它可以生成允许的词而不是弱禁止词：它描述了监督者 S，但同时也描述了闭环系统 S/G =⇒ 可以很容易地验证，在这个 case S/G = G k S = S)：这样的监管者称为单体监管者。<br>
+请注意，如果最终自动机 S 包含一些不可到达的状态，则可以进一步修剪以删除它们。</p>
+<p><em><strong>示例：制造单元</strong></em><br>
+我们已经看到组合自动机 F 是不可接受的<br>
+<img src="https://img-blog.csdnimg.cn/ac8f5d946907489f923310fde2abff24.png" alt="在这里插入图片描述"><br>
+如果 F 被修剪，去除所有弱不可控状态，获得以下监督者：<br>
+<img src="https://img-blog.csdnimg.cn/28095dab38124ca2847ccb7fcd4aab69.png" alt="在这里插入图片描述"><br>
+<em><strong>结语</strong></em><br>
+使用上述算法构建的监督器是：<br>
+可接纳的，即它仅禁用可控事件；<br>
+正确，即闭环系统只生成允许的单词；<br>
+最大允许，即它只阻止植物生成弱禁止词。</p>
+</div>
+</body>
+
+</html>
