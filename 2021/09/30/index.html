@@ -450,11 +450,11 @@ NFA 可以看作是 DFA =⇒ 的泛化，转移关系 Δ 是转移函数 δ 的�
 其中：对于所有 i = 0，… . . , k 它持有 xji ∈ X 并且对于所有 i = 1, . . . , k 成立 (xji−1 , ei0 , xji) ∈ ∆ 其中 ei0 ∈ Eε 可能是 E 中的事件或空词 ε。<br>
 这种产生式从状态 xj0 开始并生成词 w = e01e02 · · · e0k 到达状态 xjk 。</p>
 <p><em><strong>示例</strong></em><br>
-<img src="https://img-blog.csdnimg.cn/32e02b0f77d849f89ea12e3b30f1fc83.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_16,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/32e02b0f77d849f89ea12e3b30f1fc83.png" alt="在这里插入图片描述"><br>
 从 x0 开始并生成词 w = abaa 到达 x0。<br>
 产生式包含 5 个转换，而 |w| = 4。</p>
 <p>由于 ∆ 是一个转移关系（不是函数），所以可以有两个或多个产生式从相同的状态开始并生成相同的词：<br>
-<img src="https://img-blog.csdnimg.cn/1529ab211fac47829b4dbef83f9649c8.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_16,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/1529ab211fac47829b4dbef83f9649c8.png" alt="在这里插入图片描述"><br>
 也是从状态 x0 开始并生成单词 w = abaa，到达状态 x4 的产生式。</p>
 <p><em><strong>∆ 的传递闭包和自反闭包</strong></em><br>
 为了以更紧凑的方式描述 NFA 的产生式，我们引入以下符号。<br>
@@ -462,7 +462,7 @@ NFA 可以看作是 DFA =⇒ 的泛化，转移关系 Δ 是转移函数 δ 的�
 <img src="https://img-blog.csdnimg.cn/1a24ec8033de47eb955b755b2c613b85.png" alt="在这里插入图片描述"><br>
 从 x 开始并生成词 w = e01e02 · · e0k 到达状态¯x。<br>
 按照惯例，(x, ε, x) ∈ ∆∗ 对于所有 x ∈ X =⇒ 从一个状态开始并生成空词（这可能对应于一个 ε 转换或不对应），自动机保持在相同的状态。<br>
-<img src="https://img-blog.csdnimg.cn/668d8c313398452fba4b9dd96f03d17b.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAZm9yQUM=,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/668d8c313398452fba4b9dd96f03d17b.png" alt="在这里插入图片描述"><br>
 <em><strong>非确定性有限自动机的语言</strong></em><br>
 <em><strong>生成并接受的词</strong></em><br>
 由于不确定性，必须特别小心对待 NFA 接受的词的概念。<br>
@@ -914,6 +914,393 @@ w’ = abca 是弱禁止的，因为它可以用 wuc = bc 继续到禁止词 w =
 可接纳的，即它仅禁用可控事件；<br>
 正确，即闭环系统只生成允许的单词；<br>
 最大允许，即它只阻止植物生成弱禁止词。</p>
+<h2><a id="7___1047"></a>7 - 使用自动机进行故障诊断和可诊断性分析</h2>
+<p><em><strong>故障、故障诊断、可诊断性</strong></em><br>
+故障：故障是不受欢迎的事件，通常不能直接观察到。<br>
+故障诊断：包括基于对系统演化的部分观察来检测故障发生。<br>
+可诊断性分析：我们感兴趣的是在有限数量的事件观察（或发生）之后检测故障的发生 =⇒ 如果可行，可诊断性分析允许建立先验。<br>
+Automata(自动机)：我们现在使用 DFA 作为参考形式来研究上述两个问题。</p>
+<p><em><strong>定义</strong></em><br>
+要诊断的系统被建模为 DFA，其中未定义最终状态集 =⇒ G = (X, E, δ, x0)。<br>
+系统的行为由前缀封闭语言 L(G) 描述。<br>
+DFA G 对正常和故障行为进行建模。<br>
+它的字母表可以划分为 E = Eo ∪ Euo 其中：<br>
+Eo：可观察事件；<br>
+Euo：不可观测事件，其中 Euo = Ef ∪ Ereg ,<br>
+Ef ：故障事件；<br>
+Ereg：定期活动。<br>
+在更一般的设置中：Ef = Ef ,1 ∪ Ef ,2 ∪ 。 . . ∪ Ef ,r (我们忽略这个)。</p>
+<p><em><strong>假设</strong></em><br>
+(A1) DFA G 不包含死状态。<br>
+(A2) DFA G 不包含不可观察事件的循环。<br>
+假设 (A1) =⇒ 是为了简单起见。<br>
+假设 (A2) =⇒ 是必要的，并确保系统 G 不会生成长度可以无限的不可观察事件序列。</p>
+<p><em><strong>例子</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/6449656ea0ad49ed8abe3d725269b6db.png" alt="在这里插入图片描述"><br>
+Eo = {a, b, c},<br>
+Euo = {ε1, εf },<br>
+Ereg = {ε1},<br>
+Ef = {εf }。<br>
+满足假设 A1 和 A2。</p>
+<p><em><strong>投影和反投影算子</strong></em><br>
+给定字母表 E = Eo ∪ Euo 的 DFA G，可观测事件集上的投影算子由 P 表示：E∗ → Eo∗ 并定义为<br>
+<img src="https://img-blog.csdnimg.cn/474eef2f1d784b719208a8047309599a.png" alt="在这里插入图片描述"><br>
+在 L(G) 中具有 codomain 的逆投影算子由 P−1 表示：Eo∗ → 2L(G) 并定义为<br>
+<img src="https://img-blog.csdnimg.cn/c35beab723f94cd9ab192ec3c9434aab.png" alt="在这里插入图片描述"><br>
+=⇒ P 简单地“擦除”字符串 w 中的不可观察事件<br>
+=⇒ P−1 将 G 语言中的一组字符串与可观察事件的序列 w 相关联，其投影是 w。</p>
+<p>我们将表示：<br>
+s ∈ E∗ ：由 DFA 生成的事件串，<br>
+w ∈ Eo∗ ：观察到的词，即生成的字符串的可观察投影。<br>
+如果从 x0 开始的 DFA 生成字符串 s ∈ E∗ 到达 x = δ∗(x0,s) =⇒ 外部代理观察 w = P(s) ∈ Eo∗。<br>
+<img src="https://img-blog.csdnimg.cn/a255e87c21eb4d75a062bcc6a956112f.png" alt="在这里插入图片描述"><br>
+s ∈ E* DFA 事件字符串<br>
+w ∈ E*o 掩码观察词<br>
+通常，外部代理可能无法检测到确切的字符串或已达到的确切状态。</p>
+<p><em><strong>与观察一致的字符串和状态</strong></em><br>
+给定一个 DFA G = (X, E, δ, x0) 且 E = Eo ∪ Euo, ∀w ∈ Eo∗ 我们定义：<br>
+S(w) = P−1(w) ⊆ L(G) 与观察 w 一致的字符串集合；<br>
+X (w) = {x ∈ X | (∃s ∈ S(w)) δ∗(x0,s) = x} 与观察 w 一致的状态集</p>
+<p>例子<br>
+让 w = bb 是观察到的词。 两种可能的演变<br>
+<img src="https://img-blog.csdnimg.cn/97257bd029764d7997666bda79e7f02f.png" alt="在这里插入图片描述"><br>
+考虑单词 w = bc ∈ Eo*。<br>
+<img src="https://img-blog.csdnimg.cn/2498b034a229460880fff9f97d4f80be.png" alt="在这里插入图片描述"><br>
+植物产生的任何字符串都不能产生这种观察结果：<br>
+<img src="https://img-blog.csdnimg.cn/352273d875ef44619b44cba34df2775b.png" alt="在这里插入图片描述"><br>
+<em><strong>支持</strong></em><br>
+给定一个字符串 s ∈ E，s 的支持度是<br>
+||s|| = {e ∈ E | |s|e &gt; 0} ⊆ E，<br>
+由在字符串中至少出现一次的事件集组成。<br>
+例子：s = aεf ac ∈ E∗ =⇒ ||s|| = {a, c, εf }。<br>
+<img src="https://img-blog.csdnimg.cn/a8fe99bfd0ee45ebb037ac8d9f6c07ec.png" alt="在这里插入图片描述"><br>
+<em><strong>诊断<br>
+问题表述</strong></em><br>
+给定一个字母 E = Eo ∪ Euo 的 DFA G 和一组故障事件 Ef ⊆ Euo，并给定一个观察词 w ∈ Eo*，<br>
+诊断问题在于确定是否发生了故障<br>
+=⇒如果包含在 Ef 中带有标签的转变的进化产生了观察 w。</p>
+<p><em><strong>诊断功能</strong></em><br>
+给定一个字母表 E = Eo ∪ Euo 和一组故障事件 Ef ⊆ Euo 的 DFA G，一个诊断函数<br>
+<img src="https://img-blog.csdnimg.cn/9b456b7ad730483da1b8c6ba3713ffbb.png" alt="在这里插入图片描述"><br>
+如下。<br>
+ϕ(w) = N（无错）：如果对于所有 s ∈ P−1(w) 它成立 ||s|| ∩ Ef = ∅。<br>
+ϕ(w) = F (fault)：如果对于所有的 s ∈ P−1(w) 它成立 ||s|| ∩ Ef 6 = ∅。<br>
+ϕ(w) = U (uncertain)：如果存在 s0 ,s 00 ∈ P−1(w) 使得 ||s0 || ∩ Ef = ∅ 和 ||s00 || ∩ Ef 6 = ∅。</p>
+<p>当不同故障等级 Ef ,1, Ef ,2, . . . , Ef ,r 给定，每个类 i 应分别诊断，确定该类中是否发生故障，即，是否已触发 Ef 中标有符号的转换，i。<br>
+这可以解决 r 个诊断问题 =⇒ 构建 r 个诊断函数 ϕi ，对于 i = 1, 2, . . . ,r。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/0b8f613cda2d435fbc06acf804304985.png" alt="在这里插入图片描述"><br>
+<em><strong>诊断器</strong></em><br>
+表示诊断函数的一种更有趣的方式是通过诊断器 =⇒ 可观察事件字母表上的 DFA。<br>
+DFA G = (X, E, δ, x0) 与字母 E = Eo ∪ Euo 和故障事件集 Ef ⊆ Euo 的诊断器是字母 Eo 上的 DFA<br>
+Diag(G) = (Y, Eo, δy , y0) 使得 Y ⊆ (X × {N}) ∪ (X × {F})，即诊断器的每个状态都是一组对<br>
+y = {(x1, γ1),(x2, γ2), … . . ,(xk , γk )}，<br>
+其中 xi ∈ X 和 γi ∈ {N, F}，对于 i = 1, 2, . . . ，k。</p>
+<p><img src="https://img-blog.csdnimg.cn/e2cf63469e6f42afab137f5abc0f34ff.png" alt="在这里插入图片描述"><br>
+即在 Diag(G) 中，从 y0 字 w 开始产生一个状态 yw，其中包含：<br>
+(a) 在 G 中执行与 w 一致的不包含故障事件的字符串可以到达 x 的所有对 (x, N)；<br>
+(b) 可以在 G 中执行与 w 一致的包含故障事件的字符串到达 x 的所有对 (x, F)。</p>
+<p>对每个状态 y = {(x1, γ1),(x2, γ2), . . .(xk , γk )} Diag(G) 我们关联一个诊断值 ϕ(y) 使得：<br>
+ϕ(y) = N（无故障状态）：如果对于所有 i = 1,2, … ,k,γi = N;<br>
+ϕ(y) = F（故障状态）：如果对于所有 i = 1, 2, …, k; γi = F。<br>
+ϕ(y) = U（不确定状态）：如果存在 i，j ∈ {1, 2,…, k} 使得 γi = N 和 γj = F。</p>
+<p>因此，诊断器允许人们将诊断状态 ϕ(w) = ϕ(yw ) 与每个观察到的工作相关联，其中 yw = δy∗(y0,w) 是通过执行单词 w 在 Diag(G) 中达到的状态。<br>
+诊断器还包含与 w 一致的状态集的信息，因为<br>
+<img src="https://img-blog.csdnimg.cn/aacafacb0f6e4610a5a44dc83d352ac9.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/251a3cfa4f454adab0db8aa0f7949d50.png" alt="在这里插入图片描述"><br>
+<em><strong>诊断器的构建</strong></em><br>
+算法：构建诊断器。<br>
+输入： G = (X, E, δ, x0) 其中 E = Eo ∪ Euo = Eo ∪ Ereg ∪ Ef<br>
+输出： Diag(G) = (Y , Eo, δy , y0) 与 L(Diag(G)) = P(L(G))。</p>
+<ol>
+<li>
+<p>对于 G 的所有状态 x ∈ X 计算集合 Dreg (x) = {x¯ ∈ X | (∃s ∈ E∗ reg ) δ∗(x,s) = ¯x)} 包含从 x 执行一个（可能是空的）常规不可观察转换序列和集合 Df (x) = {x¯ ∈ X 可到达的所有状态 | (∃s ∈ E∗ uo \ E∗ reg ) δ∗(x,s) = ¯x} 包含从 x 执行一系列包含至少一个错误的不可观察转换可到达的所有状态。<br>
+<em>注： (1) x ∈ Dreg (x) 根据定义。<br>
+(2) 可能发生 Dreg (x) ∩ Df (x) 6 = ∅，因为状态 ¯x 可能是<br>
+可以通过两个不同的不可观察转换序列从 x 到达，一个不包含错误，一个包含错误。</em></p>
+</li>
+<li>
+<p>令 y0 = {(x, N) | x∈Dreg (x0)} ∪ {(x, F) | x ∈ Df (x0)}，即 Diag(G) 的初始状态是一组对 (x, γ) 其中：<br>
+γ = N（无故障），如果从 x0 执行一系列不包含故障的不可观察转换可到达 x； γ = F（故障）如果 x 可以从 x0 到达执行包含故障的不可观察转换序列。</p>
+</li>
+<li>
+<p>设 Y = ∅ 且 Ynew = {y0}。<br>
+注意：在算法的最后，Y 将包含 Diag(G) 的所有状态，而集合 Ynew 在每一步都包含 Diag(G) 的状态仍有待探索。</p>
+</li>
+<li>
+<p>选择一个状态 y ∈ Ynew 。<br>
+(a) 对于所有 e ∈ Eo ：<br>
+<img src="https://img-blog.csdnimg.cn/c85a1087cfd343eead29b54889aa6bdb.png" alt="在这里插入图片描述"><br>
+(b) 设 Y = Y ∪ {y} 且 Ynew = Ynew \ {y}。</p>
+</li>
+<li>
+<p>如果 Ynew 6 = ∅ 则转到 4。</p>
+</li>
+</ol>
+<p>α(y, e)：包含 (x’ , γ) 对，使得 (x, γ) ∈ y 和 e ∈ E，x’在 G 中可从 x 执行恰好一个 e 转换到达。<br>
+β1(y, e)：包含 (x’’ , N) 对，使得 (x’ , N) ∈ α(y, e)，x’’ 可在 G 中从执行一系列常规转换的 x’ 到达。 事实上，如果 x’ 可以无故障到达，那么 x’’ 也是如此。<br>
+β2(y, e)：包含 (x’’ , F) 对，使得 (x’ , N) ∈ α(y, e)，x’’ 在 G 中可以从 x’ 执行一系列包含故障的不可观察转换到达。 在这种情况下，即使 x’可以无故障到达，状态 x’‘也可以通过故障到达。<br>
+β3(y, e)：包含 (x’’, F) 对，使得 (x’, F) ∈ α(y, e)，x’’ 在 G 中可以从 x’执行一系列不可观察的转换到达。 在这种情况下，由于 x’可以通过故障到达，因此 x’’ 也是如此。</p>
+<p><img src="https://img-blog.csdnimg.cn/32f26a1697874cff834a656419127dd1.png" alt="在这里插入图片描述"><br>
+<em><strong>诊断器的复杂性</strong></em><br>
+给定一个具有基数为 nx 的状态集 X 的植物 G，让 Diag(G) 成为它的诊断器，其状态集 Y 为基数 ny 。 =⇒ 它持有 ny &lt; 22nx 。<br>
+证明：Y 中的每个状态都是基数为 2nx 的集合 Z = (X × {N}) ∪ (X × {F}) 中元素的非空子集。 Z 的可能子集包括空集的数量是 22nx 。</p>
+<p><em><strong>可诊断性<br>
+与故障诊断相关的基本属性</strong></em><br>
+具有字母 E = Eo ∪ Euo 和一组故障事件 Ef ⊆ Euo 的 DFA G 是可诊断的，如果对于所有字符串 uef ∈ L(G) 使得 ef ∈ Ef 存在一个非负整数 n ∈ N 使得<br>
+<img src="https://img-blog.csdnimg.cn/5b7d57adffa24f82a986941e97945526.png" alt="在这里插入图片描述"><br>
+换句话说：假设工厂可以生成一个包含断层的字符串 uef 并且进化继续。<br>
+在有限数量的步骤 n（这可能取决于 uef ）之后，当新观察到的词是 s = uef v 时，不存在其他字符串 s0，该字符串在工厂语言中不包含任何故障并生成对 s 的相同观察。</p>
+<p><em><strong>问题陈述</strong></em><br>
+给定字母 E = Eo ∪ Euo 的 DFA G 和一组故障事件 Ef ⊆ Euo，可诊断性问题在于确定 G 是否可诊断。<br>
+=⇒ 诊断器，为诊断问题提供解决方案，也可以成为解决可诊断性问题的有用工具。<br>
+让我们先介绍一些定义。</p>
+<p><em><strong>不确定周期</strong></em><br>
+给定一个诊断器 Diag(G)，一个循环<br>
+<img src="https://img-blog.csdnimg.cn/a9d720c615774911bfc46a2e0465e855.png" alt="在这里插入图片描述"><br>
+被称为不确定循环，如果它的所有状态都是不确定的，即 ϕ(yji) = U for i = 1, 2, . . . ，k。<br>
+基于不确定周期的概念，可以给出可诊断性的充分条件。</p>
+<p><em><strong>可诊断性的充分条件</strong></em><br>
+给定一个 DFA G，如果它的诊断器不包含不确定环，那么 G 是可诊断的。<br>
+<strong>证明</strong>：假设 DFA 不可诊断。 那么必然会出现以下情况：<br>
+DFA 可以生成包含故障 εf 的字符串 s = uεf ；<br>
+字符串 s 可以扩展为任意长度生成单词 sk = uεf e1e2…ek 对于 k ≥ 1<br>
+存在无故障串 s0k ∈ (E \ Ef )∗ 使得 P(sk ) = P(s0k ) 对于 k ≥ 1。<br>
+这意味着在诊断器中，观察到的单词 w = P(s) 产生不确定状态 yj1 并且从该状态，随着 k 的增长，存在无限长度的单词 wk = P(sk )（根据假设 A2），它们将始终产生 一种不确定的状态。 由于诊断器的状态数是有限的，因此只有存在不确定状态的循环时才有可能。<br>
+<img src="https://img-blog.csdnimg.cn/1d3137a1f2774340b1b4d490c67d3a54.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/cb565074f5fe4ce989e2a88478f4d656.png" alt="在这里插入图片描述"><br>
+没有一个循环是不确定的 =⇒DFA 是可诊断的。</p>
+<p><em><strong>例子：条件是充分但不是必要的</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/41b1ad1aa87b4052b0ef6336637bf4e7.png" alt="在这里插入图片描述"><br>
+诊断器中存在不确定状态的循环<br>
+<img src="https://img-blog.csdnimg.cn/d9ae2f5c361546878499e0d321f8c102.png" alt="在这里插入图片描述"><br>
+但是 DFA 是可诊断的：<br>
+故障序列以 (ab)k εf =⇒ 在系统故障后开始<br>
+到达状态 x2 只需两步，当序列 aa 出现时，观察到的词是 s = (ab)k aa。 由于 P−1(s) = {(ab)k εf aa} 不存在与此观察一致的无故障串 s0，并且检测到故障发生。<br>
+故障序列以 (ab)k aεf =⇒ 开始，在故障系统到达状态 x3 后，只需两步，当序列 bb 出现时，观察到的词是 s = (ab)k abb。 由于 P−1(s) = {(ab)k aεf bb} 不存在与此观察一致的无故障串 s0，并且检测到故障发生。</p>
+<p><em><strong>与不确定环相关的细化序列</strong></em><br>
+=⇒ 诊断器中不确定环的存在并不一定意味着我们可以在故障后观察到与无故障和有故障字符串一致的无限长度。<br>
+为了推导出可诊断性的充分必要条件，我们引入了一个额外的概念：<br>
+与不确定循环相关的细化序列。</p>
+<p>给定一个诊断器 Diag(G)，考虑一个不确定的循环<br>
+<img src="https://img-blog.csdnimg.cn/44a174124ab0410c950d49d01c387cba.png" alt="在这里插入图片描述"><br>
+让 yj11 是从 yj1 去除所有非故障对 (x, N) 获得的精炼诊断器状态。 与 uc 相关联的细化序列是通过应用来自 yj11 的诊断器构造获得的诊断器状态序列，用于事件串 e1e2 · · · ek 的重复出现：<br>
+<img src="https://img-blog.csdnimg.cn/2991a40e36f84195a6161454253b491e.png" alt="在这里插入图片描述"><br>
+我们可以证明一个细化的序列：<br>
+要么会达到状态 yjk = y k+1 j =⇒ 因此可以无限地继续；<br>
+或者最终会停止 =⇒ 到达没有后继者的状态。</p>
+<p>示例：上一个示例中的不确定循环 (a) 和细化序列 (b)（参见下一张幻灯片）。<br>
+<img src="https://img-blog.csdnimg.cn/56e9c0a027924137bd94e90c413dc001.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/6162a6fd4836493bb2b0ec7d76470b08.png" alt="在这里插入图片描述"><br>
+<em><strong>不确定循环和可诊断性的充要条件</strong></em><br>
+不确定环 uc 被称为不确定环，如果它的细化<br>
+序列可以无限期地继续。<br>
+一个 DFA G 是可诊断的当且仅当它的诊断器 Diag(G) 没有<br>
+包含不确定的循环。<br>
+示例：因此诊断器的唯一不确定循环不是不确定的 =⇒ 系统是可诊断的。<br>
+<img src="https://img-blog.csdnimg.cn/49eb2dd5c8fc49e68ea370dbaa294e34.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/2a79340153214f019df7efa314ebad60.png" alt="在这里插入图片描述"><br>
+<em><strong>示例：不可诊断的 DFA</strong></em><br>
+不确定循环（a）和细化序列（b）<br>
+<img src="https://img-blog.csdnimg.cn/abc8dfbbe38d40de8db48c46c491e8b4.png" alt="在这里插入图片描述"><br>
+我们从细化状态 y01 = {(x3, F)} 开始构造<br>
+通过重复出现序列 ab 来细化序列。<br>
+在 a 之后，我们到达 y11 = {(x3, F)}，由此 b 的出现产生 y02 = {(x3, F)}。 y01 = y02 =⇒ 细化的序列可以无限地延续 =⇒ 唯一的不确定循环是不确定的 =⇒ 系统不可诊断。</p>
+<h2><a id="8___1252"></a>8 - 离散事件系统中的不透明度</h2>
+<p><em><strong>动机</strong></em><br>
+不透明性使外部观察者不可能推断出系统秘密信息的真实性。<br>
+<img src="https://img-blog.csdnimg.cn/2a0d7bedeb7b40d1830204653fe286f8.png" alt="在这里插入图片描述"><br>
+对于离散事件系统 (DES)，Bryans 等人。 2005 年首次正式确定了过渡系统的不透明度。</p>
+<p><em><strong>不透明度</strong></em><br>
+设置：<br>
+系统使用 DFA 建模；<br>
+有一个恶意的观察者，称为入侵者；<br>
+入侵者知道 DFA 的结构；<br>
+入侵者部分地观察系统的行为——观察事件的子集 EI；<br>
+秘密是状态或语言的子集。<br>
+<img src="https://img-blog.csdnimg.cn/b7dbd6d10dde4cfebdb39030e10a5012.png" alt="在这里插入图片描述"><br>
+入侵者通过“面具”观察系统<br>
+不透明性：入侵者永远无法从其观察中推断出秘密。</p>
+<p><em><strong>分类</strong></em><br>
+根据秘密是被定义为一组状态还是一种语言，通常将不透明度分为<br>
+<img src="https://img-blog.csdnimg.cn/8f279e29ba884c6f878d441069d1d9bc.png" alt="在这里插入图片描述"><br>
+<em><strong>基于状态的不透明度<br>
+当前状态不透明度</strong></em><br>
+目标：无论入侵者观察到什么，都不能确定系统的当前状态是否处于秘密状态。<br>
+我们表示 PEI : E∗ → EI∗ 从 E 到 EI 的投影。<br>
+给定 DFA G = (X, E, δ, x0)、秘密 S ⊆ X 和入侵者可观察到的事件集合 EI，系统被称为当前状态不透明 (CSO) 相对于 (wrt) S 和 EI 如果<br>
+<img src="https://img-blog.csdnimg.cn/a5006c2f55474288aaa525a80f8f3419.png" alt="在这里插入图片描述"><br>
+对于导致秘密状态的任何进化，存在另一个产生相同观察但导致非秘密状态的进化。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/f616275afeaa4c6f9ab546acfa43ee9e.png" alt="在这里插入图片描述"><br>
+没有观察到：当前状态 x ∈ {0, 1}<br>
+观察 b：当前状态 x ∈ {2, 4, 5}<br>
+观察 bc：当前状态 x ∈ {3, 6}<br>
+<img src="https://img-blog.csdnimg.cn/14e952c777bc44f6925c565ff3c506f3.png" alt="在这里插入图片描述"><br>
+CSO 不是系统本身的属性，但也取决于 S 和 EI 。<br>
+<img src="https://img-blog.csdnimg.cn/73b95dcf326a4e2f99077419ff642f03.png" alt="在这里插入图片描述"><br>
+没有观察到：当前状态 x ∈ {0, 1}<br>
+观察 b：当前状态 x ∈ {2, 4, 5}<br>
+观察 bc：当前状态 x ∈ {3, 6}<br>
+<img src="https://img-blog.csdnimg.cn/63002862d20040c8b6d0ef4e05d2dd10.png" alt="在这里插入图片描述"><br>
+<em><strong>初始状态不透明度</strong></em><br>
+入侵者可能在任何时刻开始观察系统，因此系统的行为不再是 L(G) = {σ ∈ E∗|δ(x0, σ)!}，我们想了解入侵者是否 可以推断产生观察的初始状态⇒初始状态不透明度<br>
+给定状态 x ∈ X，我们定义<br>
+<img src="https://img-blog.csdnimg.cn/7b267129382a427388ec389a117f3207.png" alt="在这里插入图片描述"><br>
+从 x 生成的语言。 显然，L(G) = L(G, x0)。<br>
+给定状态的子集 Y ⊆ X，我们定义<br>
+<img src="https://img-blog.csdnimg.cn/c713f4f881474f75aabe69e1469f2137.png" alt="在这里插入图片描述"><br>
+从 Y 生成的语言。</p>
+<p>目标：无论入侵者观察到什么，都不能确定初始状态是否处于秘密状态。<br>
+入侵者不知道初始状态：X 中的任何状态都是可能的。<br>
+给定 DFA G = (X, E, δ)、秘密 S ⊆ X 和入侵者可观察到的事件集合 EI，如果<br>
+<img src="https://img-blog.csdnimg.cn/06fb835dc8b2484e8dcc7e149190d39c.png" alt="在这里插入图片描述"><br>
+ISO：对于从秘密状态生成的任何进化，至少存在一个可以生成相同观察结果的非秘密状态。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/2dfbe479bb414cdeb2849cf9c1da25cc.png" alt="在这里插入图片描述"><br>
+设 S = {0, 2} 和 EI = {b, c}。<br>
+没有观察到：初始状态 x ∈ {0, 1, 2, 3, 4, 5, 6}<br>
+观察 b：初始状态 x ∈ {0, 1}<br>
+观察 c：初始状态 x ∈ {2, 4, 5}<br>
+观察 bc：初始状态 x ∈ {0, 1} ⇒ DFA 是 ISO w.r.t S 和 EI</p>
+<p><em><strong>基于语言的不透明度</strong></em><br>
+<em><strong>语言不透明</strong></em><br>
+目标：无论入侵者观察到什么，都不确定观察到的序列是否在秘密中。<br>
+给定 DFA G = (X, E, δ, x0)、秘密 S ⊆ L(G) 和入侵者可观察到的事件集合 EI，系统被称为语言不透明 (LO) wrt S 和 EI 如果<br>
+<img src="https://img-blog.csdnimg.cn/8fe8857f23324c0f96dcea13cdfb5613.png" alt="在这里插入图片描述"><br>
+LO：对于系统可能生成的任何秘密字符串，都存在一个可以生成并产生相同观察结果的非秘密字符串。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/1b86bfa9d6884515a42a87d58fa96b12.png" alt="在这里插入图片描述"><br>
+设 S = {abc} 和 EI = {b, c}。<br>
+没有观察到：生成的序列 σ ∈ {ε, a}<br>
+观察 b：生成的序列 σ ∈ {b, ba, ab}<br>
+观察 bc：生成的序列 σ ∈ {bac, abc}<br>
+⇒ DFA 是 LO w.r.t S 和 EI</p>
+<p><em><strong>不透明度验证和执行<br>
+不透明度问题</strong></em><br>
+在这个框架中可以表述两个主要问题。<br>
+不透明验证：检查系统是否不透明。 我们可以考虑当前状态不透明度、初始状态不透明度和语言不透明度。<br>
+不透明强制：使不透明的系统不透明。<br>
+⇒ 使用监督控制。<br>
+⇒ 适当改变传感器配置，从而改变某些事件发生时产生的观察结果。</p>
+<p><em><strong>验证当前状态的不透明度<br>
+一组一致的状态</strong></em><br>
+给定一个观察 w ∈ EI∗，我们定义 C(w) = {x ∈ X|∃σ ∈ E∗ : δ(x0, σ) = x, PEI(σ) = w}<br>
+与 w 一致的状态集。<br>
+例子：<br>
+<img src="https://img-blog.csdnimg.cn/9f99167916264d189a7fd2af0e5c9696.png" alt="在这里插入图片描述"><br>
+<em><strong>CSO的充要条件</strong></em><br>
+定理：DFA G = (X, E, δ, x0) 是当前状态不透明 w.r.t S 和 EI<br>
+如果<br>
+<img src="https://img-blog.csdnimg.cn/0c659b53dfcb45f0aee6e9fd6264832f.png" alt="在这里插入图片描述"><br>
+证明：(if) ∀w, ∃x ∈ C(w) \ S。令 σ0 ∈ E∗ s.t。 δ(x0, σ0 ) = x 和 PEI(σ0 ) = w。 然后对于任何 σ ∈ E∗ 使得 δ(x0, σ) ∈ S 和 PEI(σ) = w，存在 σ0 使得 δ(x0, σ0 ) = x /∈ S 和 PEI(σ0 ) = w。 因此，系统是 CSO w.r.t S 和 EI 。<br>
+（仅当）假设存在 w ∈ EI∗ 使得 C(w) ⊆ S. 即，对于所有 σ ∈ E∗ 使得 PEI(σ) = w, δ(x0, σ) ∈ S。因此，有 不存在 σ0 ∈ E∗ 使得 PEI(σ0 ) = w 和 δ(x0, σ0 ) /∈ S，并且系统不是 CSO wrt S 和 EI 。</p>
+<p><em><strong>观察员</strong></em><br>
+基于上述定理，要检查 DFA 是否为 CSO，我们需要为所有 w ∈ PEI(L(G)) 计算 C(w)。<br>
+⇒ 观察者：给定 NFA 的等效 DFA。<br>
+在手头的情况下，给定植物 G = (X, E, δ, x0) 和集合 EI ⊆ E<br>
+对于入侵者可观察到的事件，我们构造观察者 Go = (Xo, EI, δo, xo0) 如下：<br>
+步骤1：用G中的ε替换所有不可观察的事件e∈E\EI；<br>
+步骤2：构造Step 1中得到的NFA的等效DFA Go。<br>
+Go 的每个状态 y ∈ Xo 都是 X 的子集，即 y ⊆ X。给定一个观察 w ∈ Eo∗ ，它是 δ(xo0,w) = C(w)。<br>
+<img src="https://img-blog.csdnimg.cn/42fb80a8c903472da1ec7022165144cf.png" alt="在这里插入图片描述"><br>
+验证 CSO 的算法<br>
+<img src="https://img-blog.csdnimg.cn/8e520464004f4f88a0d376f7dca2fb2b.png" alt="在这里插入图片描述"><br>
+验证 CSO 的最坏情况复杂度是指数 O(2n)，其中 n 是 G 的状态数。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/a31f185abbc44af9a2204757d3b2842f.png" alt="在这里插入图片描述"><br>
+观察者的任何状态都不是 S = {3, 5}<br>
+⇒ G 是 CSO w.r.t S 和 EI 的子集</p>
+<p><em><strong>验证初始状态不透明度</strong></em><br>
+<em><strong>生成 w 的状态集</strong></em><br>
+给定一个观察 w ∈ PEI(L(G, X))，我们定义<br>
+<img src="https://img-blog.csdnimg.cn/ce43252c33af4396a72cd494683ee3f7.png" alt="在这里插入图片描述"><br>
+生成 w 的状态集。<br>
+例子：<br>
+<img src="https://img-blog.csdnimg.cn/ad47a7670aa64353b1a55516f4d0f2a4.png" alt="在这里插入图片描述"><br>
+<em><strong>ISO的充要条件</strong></em><br>
+定理：A DFA G = (X, E, δ) 是初始状态不透明 w.r.t S 和 EI<br>
+如果<br>
+<img src="https://img-blog.csdnimg.cn/7e9053b8611045f6a8ea29d795624da7.png" alt="在这里插入图片描述"><br>
+证明：类似于CSO定理。<br>
+为了检查 G 是否是 ISO w.r.t S 和 EI ，需要计算 w ∈ PEI(L(G, X) 的所有集合 I(w)。<br>
+⇒ 初始状态估计器：逆向自动机的观察者</p>
+<p><em><strong>逆向自动机</strong></em><br>
+给定一个自动机 G = (X, E, δ)，它的逆向自动机 Gr = (X, E, δr) 是将 G 中的所有弧逆向得到的自动机。<br>
+例子：<br>
+<img src="https://img-blog.csdnimg.cn/9d49a6a7d88b478c99447fb81eb51c73.png" alt="在这里插入图片描述"><br>
+<em><strong>初始状态估计器</strong></em><br>
+初始状态估计器（estimator）：初始状态为X的逆向自动机的观察者<br>
+设 Ge = (Xe , EI , δe , xe0) 是 G 的估计量。 Ge 的每个状态 y ∈ Xe 是 X 的子集，即 y ⊆ X。<br>
+给定一个观察 w ∈ Eo∗ ，它是<br>
+<img src="https://img-blog.csdnimg.cn/533c4c447a694280b2051debd2eb1016.png" alt="在这里插入图片描述"><br>
+其中 wr 是 w 的逆。<br>
+<img src="https://img-blog.csdnimg.cn/e36580f03f87419582592f96bc73f418.png" alt="在这里插入图片描述"><br>
+<em><strong>验证 ISO 的算法</strong></em><br>
+输入：G、S 和 EI<br>
+输出：是或否<br>
+1.构造 G 的逆向自动机 Gr = (X, E, δr)<br>
+2.构造估计量 Ge = (Xe , EI, δe , xe0)，即逆向自动机 Gr 的观察者<br>
+3.If 对于所有状态 y ∈ Xe , y * 小号<br>
+是：系统是 ISO<br>
+4.其他<br>
+否：系统不是 ISO<br>
+5.结尾</p>
+<p>构造逆自动机的复杂性是多项式的，而构造观察者的复杂性是指数的。<br>
+因此，验证 ISO 的最坏情况复杂度是指数级的，O(2n)，其中 n 是 G 的状态数。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/b521041426ab4d6d9edb32126b0252fe.png" alt="在这里插入图片描述"><br>
+估计器的任何状态都不是 S = {0, 2}<br>
+⇒ G 是 ISO w.r.t S 和 EI 的子集</p>
+<p><em><strong>概括</strong></em><br>
+不透明度是一种信息流属性，暗示入侵者无法推断系统的秘密信息。<br>
+根据机密的定义和特定应用，不透明度分为不同的类别。<br>
+当前状态不透明度验证的关键是重构当前状态→观察者：系统的等效DFA。<br>
+初始状态不透明度验证的关键是重构初始状态→估计器：系统逆向自动机的观察者。<br>
+验证 CSO 和 ISO 的复杂性与系统状态的数量呈指数关系。</p>
+<p><em><strong>使用 SC 执行 CSO</strong></em><br>
+<em><strong>使用监督控制的公民社会组织执法</strong></em><br>
+问题陈述：给定一个不是 CSO w.r.t S 和 EI 的 DFA G，合成一个最大允许的监督器 Sup，使得受控系统 Sup/G 是 CSO w.r.t S 和 EI 。<br>
+最大允许：对于任何其他主管 Sup0 s.t. Sup0 /G 是 CSO，L(Sup0 /G) ⊆ L(Sup/G)。<br>
+假设： 1 主管可以观察所有事件。<br>
+2 监督者知道入侵者可观察到的事件的集合 EI。<br>
+3 入侵者不知道监督者的存在。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/65d87dad7f644bd09ed476b5fff56610.png" alt="在这里插入图片描述"><br>
+观察 w = bc, C(w) = {3, 6} ⊆ S。泄露秘密的序列是 abc 和 bac<br>
+<img src="https://img-blog.csdnimg.cn/722ce4573f5c415886ee9ec60fa43b6c.png" alt="在这里插入图片描述"><br>
+受控系统是 CSO w.r.t S 和 EI<br>
+如何计算不泄露秘密的语言作为规范？</p>
+<p>增强型 I 观察者<br>
+增强的 I 观察者 (AIO)：Ga := G||Go，G = (X, E, δ, x0) 及其观察者 Go = (Xo, EI, δo, xo0) 的并发组合。<br>
+我们将 AIO 表示为 Ga = (Q, E, δa, q0)，其中 Q ⊆ X × Xo 和 q0 = (x0, xo0)。<br>
+AIO 的特性：<br>
+这是：<br>
+L(Ga) = L(G)<br>
+设 σ ∈ L(Ga) 和 δa(q0, σ) = (x, Cw )。 然后 x = δ(x0, σ) 和 Cw = C(PEI(σ))。<br>
+证明：由 G||Go 的性质得出。<br>
+<img src="https://img-blog.csdnimg.cn/0b50e2b43e974f4bba10ebb896463eb8.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/34e1ab36e45f464abeabd95823b8a43d.png" alt="在这里插入图片描述"><br>
+<em><strong>禁止状态</strong></em><br>
+我们将 AIO Ga = (Q, E, δa, q0) 中禁止状态的集合 F 定义为<br>
+<img src="https://img-blog.csdnimg.cn/6e02c0e33972428c9af48cbfea402ded.png" alt="在这里插入图片描述"><br>
+对于任何 σ ∈ L(Ga) 使得 δa(q0, σ) ∈ F ⇒ C(PEI(σ)) ⊆ S。也就是说，Ga 中导致 F 中状态的序列 σ 对应于将泄漏的序列 G中的秘密<br>
+定理：<br>
+状态Ga监督控制问题的一种解决方案<br>
+规范 F 是 G 对 S 和 EI 的 CSO 强制问题的解决方案。</p>
+<p><em><strong>监督者设计算法</strong></em><br>
+输入：G、S 和 EI<br>
+输出：Sup s.t. Sup/G 是 CSO 和最大许可<br>
+1 为 G wrt EI 构造观察者 Go = (Xo, EI, δo, xo0)<br>
+2 计算增强的 I-Observer Ga = (Q, E, δa, q0) 为 Ga = G||Go 3 计算集合 F Ga 中的禁止状态为 F = {q = (x, Cw ) ∈ Q|Cw ⊆ S}。<br>
+4 遵循第 6 章（监督控制）中的算法为状态规范 F 设计 Ga 的 Sup。</p>
+<p><em><strong>示例</strong></em><br>
+<img src="https://img-blog.csdnimg.cn/8cc7991950ab4b2c81d7d08dce0f7042.png" alt="在这里插入图片描述"><br>
+禁止状态的集合是 F = {q3, q6}。 让 c 无法控制。 ⇒ 弱禁止状态集是 Fweak = {q2, q3, q5, q6}。<br>
+<img src="https://img-blog.csdnimg.cn/bcab1681846a4c8d8806373e637cc98a.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/f4fab15ea1c845d2ac09e787f7e3cb21.png" alt="在这里插入图片描述"><br>
+Supervisor Sup 和受控系统 Sup/G<br>
+显然，现在 Sup/G 是 CSO w.r.t S = {3, 6} 和 EI = {b, c}。</p>
 </div>
 </body>
 
